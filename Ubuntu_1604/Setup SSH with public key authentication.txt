@@ -10,7 +10,7 @@ Setup SSH with public key authentication
     $ chome 700 ~/.ssh
     
     
-  3.Generatie a new key pair.
+  3.Generate a new key pair.
   
     You can use 'ssh-keygen' command to generate a new key pair. 
     You also can use a old key pair, skip this step.
