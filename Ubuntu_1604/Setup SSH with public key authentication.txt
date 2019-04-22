@@ -112,19 +112,3 @@ Setup SSH with public key authentication
         Change as:
           
           PubkeyAuthentication yes
-        
-
-  
-      
-    
-    
-    
-    
-    
-    
-    
-  
-  
-
-
-
