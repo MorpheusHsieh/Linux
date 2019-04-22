@@ -82,7 +82,7 @@ Setup SSH with public key authentication
     
       $ exit
       logout
-      Connection to u1604s closed.
+      Connection to xxxxxx closed.
       
       
   5.Disable SSH password authentication.
