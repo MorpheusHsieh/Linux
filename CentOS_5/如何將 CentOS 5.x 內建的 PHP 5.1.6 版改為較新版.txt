@@ -1,0 +1,40 @@
+如何將 CentOS 5.x 內建的 PHP 5.1.6 版改為 5.2.x 
+
+
+基於系統元件的完整，我就不採用編譯的方式來更新 PHP，而是計畫使用 YUM 來進行 PHP
+的更新。但是，使用 YUM 更新時卻又發現 CentOS 官網或映設站台的 PHP 仍舊是 5.1.6 
+版，參拜了 Google 大神後，發現國外論壇有人提供下載更新的套件，安裝後可以透過 YUM 
+更新。不過，因為是公司的主機，所以必須注重安全性，對於不明來源的下載網址，通常得
+拒於千里之外。
+
+繼續參拜 Google 大神後，終於找到一篇討論文章，修改 YUM 設定後，就可以透過 YUM 
+從官網更新 PHP 到 5.2.x 版。
+
+修改檔案：/etc/yum.repos.d/CentOS-Base.repo
+
+# vi /etc/yum.repos.d/CentOS-Base.repo
+
+在檔案最後我按文章添加了以下設定
+
+[c5-testing]
+  name=CentOS-5 Testing
+  baseurl=http://dev.centos.org/centos/$releasever/testing/$basearch/
+  enabled=0
+  gpgcheck=1
+  gpgkey=http://dev.centos.org/centos/RPM-GPG-KEY-CentOS-testing
+
+上述設定網址都指向官方網站，我可以放心更新 PHP。存檔後，下達更新命令：
+
+# yum --disablerepo=\* --enablerepo=c5-testing install php 
+
+
+更新完畢後以 PHP命令檢視版本：
+
+# php -v
+
+
+第二種方法為不檢查 gpgkey
+
+#yum -y update php* --nogpgcheck
+  
+  --nogpgcheck  參數解決問題

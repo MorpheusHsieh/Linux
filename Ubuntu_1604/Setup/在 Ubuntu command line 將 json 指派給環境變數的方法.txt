@@ -1,0 +1,41 @@
+在 Ubuntu command line 將 json 指派給環境變數的方法
+
+1. config.json 檔案的內容如下：
+
+	{
+	  "masters": [
+	  	{
+	  	"id": "k8s-master1",
+	  	"ip": "10.10.1.81"
+	  	}, {
+	  	"id": "k8s-master1",
+	  	"ip": "10.10.1.82"
+	  	}
+	  ],
+	  "nodes": [
+	  	{
+	  	"id": "k8s-node1",
+	  	"ip": "10.10.1.83"
+	  	}, {
+	  	"id": "k8s-node2",
+	  	"ip": "10.10.1.84"
+	  	}
+	  ],
+	  "proxy": [
+	  	{
+	  	"id": "k8s-proxy",
+	  	"ip": "10.10.1.85"
+	  	}
+	  ]
+	}  
+
+	
+2. 執行指令：
+	
+	$ config=$(cat config.json)
+	
+	
+3. 查看變數內容：
+
+	$ echo $config
+	

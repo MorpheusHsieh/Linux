@@ -1,0 +1,156 @@
+1. Minimal Desktop install CentOS 6.1
+
+2. startup ifcfg-eth0
+
+  # vi /etc/inittab
+  
+  將 5 改為 3
+  
+  # vi /etc/sysconfig/network-scripts/ifcfg-eth0
+  
+  將 xxxx 改為 "yes"
+  加上 BOOTPROTO="dhcp"
+  
+  # reboot
+  
+
+3. 安裝 rpmforge-release and elrepo
+
+  # yum -y install wget mlocate
+  # updatedb
+  # mkdir /download
+
+  # wget http://packages.sw.be/rpmforge-release/rpmforge-release-0.5.2-2.el6.rf.i686.rpm
+  # rpm --import http://apt.sw.be/RPM-GPG-KEY.dag.txt
+  # rpm -K rpmforge-release-0.5.2-2.el5.rf.*.rpm
+  # rpm -i rpmforge-release-0.5.2-2.el5.rf.*.rpm
+
+  # rpm --import http://elrepo.org/RPM-GPG-KEY-elrepo.org
+  # rpm -Uvh http://elrepo.org/elrepo-release-6-4.el6.elrepo.noarch.rpm
+
+  # yum -y update
+
+4. 安裝開發工具
+
+  # yum groupinstall 'Development Tools'
+
+5. 安裝解壓縮 bz2 軟體
+
+  # yum -y install bzip2-devel cmake
+
+  
+5. Install OpenCV
+
+   ?? # yum -y install pkg-config gtk zlib zlib-devel libjpeg libjasper openexr
+
+   OpenCV-2.1.0 的下載位址
+   http://sourceforge.net/projects/opencvlibrary/files/opencv-unix/2.1/OpenCV-2.1.0.tar.bz2/download
+   
+   # tar -xjf OpenCV-2.1.0.tar.bz2 -C /usr/lcoal/src
+   # mkdir opencv.build
+   # cd opencv.build
+   # cmake ..
+   # make -j 2
+   # make install
+   
+   預設安裝位置：/usr/local/share/opencv
+   
+   在 /etc/ld.so.conf 裡加上 /usr/local/lib
+   
+   # ldconfig
+   
+   現在打開另一個文件
+
+   sudo gedit /etc/bashrc
+
+   在文件末尾添加內容：
+
+   PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
+
+   export PKG_CONFIG_PATH
+
+
+6. Install libusb & usbmuxd
+
+  # yum -y install libusb libusb-devel usbmuxd usbmuxd-devel
+
+
+7. 安裝 QT4
+
+  # yum install qt4 qt4-designer
+  
+8.執行 CurrencyDet_AP
+
+  # mkdir /mnt/usbdisk
+  # mount /dev/sdb1 /mnt/usbdisk
+  # mkdir /download
+  # cd /download
+  # cp -r /mnt/usbdisk/CurrencyDet_AP 
+  # cd CurrencyDet_AP
+  # ./CurrencyDet_AP
+     
+
+9. 建立 Ramdisk
+
+  編輯 grub.conf 
+
+  # vi /etc/grub.conf
+
+  找到 
+
+  kernel /vmlinuz-2.6.9-42.0.10.EL ro root=/dev/VolGroup00/LogVol00
+
+  並在後面加上 "ramdisk_size=131072"，所以最後應該長得很像
+
+  kernel /vmlinuz-2.6.9-42.0.10.EL ro root=/dev/VolGroup00/LogVol00 ramdisk_size=131072
+
+  然後儲存並離開 grub.conf 後重新開機
+
+  # reboot
+
+  重開機後，格式化 ramdisk 並 Mount ramdisk，這裡假設 ramdisk 的擁有者為 t1280
+
+  # mke2fs -m 0 /dev/ram0
+  # mkdir /home/t1280/ramdisk
+  # mount /dev/ram0 /home/t1280/ramdisk
+  # chown t1280.t1280 /home/t1280/ramdisk
+
+  如果要在每次開機的時候啟動 ramdisk, 則編輯 /etc/rc.local 檔案
+
+  # mke2fs -m 0 /dev/ram0
+  # mount /dev/ram0 /home/t1280/ramdisk
+  # chown t1280.t1280 /home/t1280/ramdisk
+
+
+10. 將帳號 t1280 的權限提升
+
+  設定 t1280 不用再鍵入密碼就可變成 root 
+
+  # visudo
+  
+  找到下列文字
+  # %wheel        ALL=(ALL)       NOPASSWD: ALL         //預設值
+  
+  修改成下列文字
+  %wheel ALL=(ALL)       NOPASSWD: ALL                  //修改後
+ 
+  修改 /etc/group，並修改內容
+ 
+  # vi /etc/group
+  
+  wheel:x:10:root                                       //預設值
+  wheel:x:10:root,t1280                                 //修改後
+
+
+
+
+
+
+
+
+
+
+
+
+
+

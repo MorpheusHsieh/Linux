@@ -1,0 +1,80 @@
+#java -version
+
+如有openjdk的東東要刪除
+# yum remove java-1.6.0-openjdk
+
+然後安裝JDK
+
+
+1.下載 Sun Java SDK 6u27 RPM 套件
+
+  # wget http://download.oracle.com/otn-pub/java/jdk/6u27-b07/jdk-6u27-linux-i586-rpm.bin
+  
+    
+2.變更 jdk 套件的權限並安裝
+
+  # chmod 755 ./jdk-6u27-linux-i586-rpm.bin
+  # sh ./jdk-6u27-linux-i586-rpm.bin
+  
+
+3.使用 alternatives -install 命令來安裝 java, javaws, libjavaplugin.so 
+  (for firefox) 和 javac。
+  
+  3.1 先查看已安裝的相關 Java 程式
+   
+    一般來說 Centos 5.x 會預設安裝 jre-1.6.0-openjdk 和 jre-1.4.2-gcj，這是因為
+    CentOS 再安裝過程中需要 Java，所以先選用這兩者來使用的原因。
+    顯示訊息如下：
+    
+    # alternatives --config java
+    There are 2 programs which provide 'java'.
+    Selection    Command
+    -----------------------------------------------
+    *+ 1           /usr/lib/jvm/jre-1.6.0-openjdk/bin/java
+    2           /usr/lib/jvm/jre-1.4.2-gcj/bin/java
+    Enter to keep the current selection[+], or type selection number:        
+    
+    訊息中表示 jre-1.6.0-openjdk 被選用了
+    
+    
+  3.2 使用 alternatives 系統來安裝所需要的命令，為了達到目的，我們必須記下
+      已安裝的 Java 版本數量 N, 並使用 N+1 作為我們要安裝的編號。
+      以步驟 3.1 為例，已安裝 Java 有 2個，所以我們必須安裝在第 3個。
+      指令如下：
+              
+    # alternatives --install /usr/bin/java java /usr/java/latest/bin/java 3                                                                                                                                                                                                                                                                                                                           
+
+  
+  3.3 啟動最新安裝的版本
+  
+    執行指令如下：
+    # alternatives --config java
+    
+    將會看到系統訊息：
+    There are 3 programs which provide 'java'.
+      Selection    Command
+    -----------------------------------------------
+    *+ 1           /usr/lib/jvm/jre-1.6.0-openjdk/bin/java
+       2           /usr/lib/jvm/jre-1.4.2-gcj/bin/java
+       3           /usr/java/latest/bin/java
+    Enter to keep the current selection[+], or type selection number: 3   
+    
+    因為我們所安裝的最新版本 Java 為第 3個，所以選 3
+    然後，查看一下 Java 的版本
+    
+    # java -version
+    java version "1.6.0_27"
+    Java(TM) SE Runtime Environment (build 1.6.0_27-b07)
+    Java HotSpot(TM) Client VM (build 20.2-b06, mixed mode, sharing)
+    
+
+4.測定環境變數
+
+  完成安裝後，還要配置環境變量，我們將把環境變量追加到/etc/profile裡
+
+  #vi /etc/profile  
+
+  在 /etc/profile 檔案的最後面增加下列文字：  
+  export JAVA_HOME=/usr/java/jdk1.6.0_27 
+  export PATH=$PATH:$JAVA_HOME/bin  
+  export CLASSPATH=.:$JAVA_HOME/jre/lib:$JAVA_HOME/lib:$JAVA_HOME/lib/tools.jar  

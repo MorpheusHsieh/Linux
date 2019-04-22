@@ -1,0 +1,113 @@
+How to install Apache Tomcat Connector Jk 1.2.32 on CentOS 5.x
+
+
+1.下載，組態、編譯及安裝 Tomcat-Connectors
+
+  # wget http://ftp.mirror.tw/pub/apache//tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.32-src.tar.gz
+  # tar -zxvf tomcat-connectors-1.2.25-src.tar.gz
+  # cd tomcat-connectors-1.2.25-src/native
+  
+  因為在安裝 Tomcat connnector 的過程中需要 apxs, 而 Apache HTTPd 已包含了 apxs
+  ，所以用內建的就可以了
+  
+  # ./buildconf.sh 
+  # ./configure --with-apxs=/usr/local/apache2/bin/apxs 
+  # make && make install 
+
+  保險起見，可以查一下 /usr/local/apache2/modules 是否有 mod_jk.so
+  如果沒有，可以從 Tomcat-Connectors 拷貝過去
+  
+  # cp ./apache-2.0/mod_jk.so /usr/local/apache2/modules/
+
+
+2.編輯組態設定檔
+
+ 2.1 在 /etc/httpd/conf/httpd.conf 加入以下文字 ??
+ 
+        /usr/local/apache2/conf/httpd.conf
+   
+   Include conf/httpd-jk.conf      # 以模組化方式設定 mod_jk
+   Include conf/httpd-vh.conf      # 以模組化方式設定 VirtualHost
+   
+     
+  2.1.1 httpd-jk.conf 的內容，可以在 tomcat-connectors-1.2.32-src/conf 找到
+ 
+   LoadModule jkmodule modules/mod_jk.so
+   <IfModule jk_module>
+     # place its log file.
+     JkLogFile logs/mod_jk.log
+     
+     # Our JK log level (trace, debbug, info, warn, error)
+     JkLogLevel debug
+     
+     # Our JK shared memory file
+     JkShmFile log/mod_jk.shm
+   </IfModule>
+  
+  2.1.2 httpd-vh.conf 的內容：
+  
+   <VirtualHost *:80>
+      
+      # send all requests ending in .jsp to wlb
+      # 此處的 wlb 為 workers.properties 中的 workers 名稱
+      JkMount /*.jsp wlb
+   
+      # send all requests ending /servlet to wlb
+      JkMount /*/servlet/ wlb
+      
+      # send all requests ending /examples to wlb
+      JkMount /examples/* wlb
+    </VirtualHost> 
+   
+ 2.2 從 tomcat-connector 的 conf 目錄中拷貝需要的檔案
+   
+   # cp tomcat-connectors-1.2.32-src/conf/httpd-jk.conf .  
+   # cp tomcat-connectors-1.2.32-src/conf/uriworkermap.properties .  
+   # cp tomcat-connectors-1.2.32-src/conf/workers.properties.minimal workers.properties  
+
+ 2.3 重新啟動 httpd 和 tomcat
+ 
+   # service tomcat restart
+   # service httpd restart
+   
+ 2.4 測試 apache 和 tomcat 是否正常合作
+ 
+   在瀏覽器的網址中輸入 http://localhost/examples/ ，應該可以看到以下文字：
+   
+   Apache Tomcat Exammples
+     ‧Servlets Examples
+     ‧JSP Examples
+     
+   點選任一個連結，應該會出現新的連結畫面。
+   
+ 2.5 爾後的網頁需放在 Tomcat 安裝目錄下的 webappps 子目錄，
+     並在 httpd.conf 的 <VirtualHost> ... </VirtualHost> 間加上別名即可。
+     
+     例如：
+     <VirtualHost *:80>
+       JkMount /docs/* wlb
+     </VirtualHost>
+ 
+3.另一組 workers.properties 
+  
+  # Define 3 workers, 2 real workers using ajp12, ajp13, the last one being a loadbalancing worker 
+  worker.list=worker1, worker2, worker3
+
+  # Set properties for worker1 (ajp13)
+    worker.worker1.type=ajp13
+    worker.worker1.host=locahost
+    worker.worker1.port=8007
+    worker.worker1.lbfactor=1
+  
+  # Set properties for worker2 (ajp13)
+    worker.worker2.type=ajp13
+    worker.worker2.host=locahost
+    worker.worker2.port=8009
+    worker.worker2.lbfactor=1
+    worker.worker2.connection_pool_timeout=600
+    worker.worker2.socket_keepalive=1
+    worker.worker2.socket_timeout=60
+    
+  # Set properties for worker3 (lb) which use worker1 and worker2
+    worker.worker3.balance_workers=worker1,worker2
+      

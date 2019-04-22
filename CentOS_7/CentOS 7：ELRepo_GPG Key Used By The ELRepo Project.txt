@@ -1,0 +1,30 @@
+GPG Key Used By The ELRepo Project
+
+View this page securely
+
+The ELRepo Project uses a GPG key to sign all RPM packages that we release.
+
+Each RPM package that is released by the ELRepo Project is signed with a GPG signature. By default, yum and rpm will verify these signatures and refuse to install any packages that are not signed or have bad signatures. You should always verify the signature of a package before you install it. These signatures ensure that the packages you install are genuine as released by the ELRepo Project and have not been altered (accidentally or maliciously) since their release.
+
+The key is included in the elrepo-release package and you can find it within the /etc/pki/rpm-gpg/ directory. (File RPM-GPG-KEY-elrepo.org)
+
+The key may be downloaded from this website and is also available on a public key server (gpg.mit.edu).
+
+Location: /etc/pki/rpm-gpg/RPM-GPG-KEY-elrepo.org
+Download from: elrepo.org
+Download from: pgp.mit.edu (external link)
+Fingerprint: 96C0 104F 6315 4731 1E0B B1AE 309B C305 BAAD AE52
+
+Users should verify the key by checking it's fingerprint matches the fingerprint listed here before installing it:
+
+	# gpg --quiet --with-fingerprint RPM-GPG-KEY-elrepo.org
+	pub  1024D/BAADAE52 2009-03-17 elrepo.org (RPM Signing Key for elrepo.org) <secure@elrepo.org>
+		  Key fingerprint = 96C0 104F 6315 4731 1E0B  B1AE 309B C305 BAAD AE52
+	sub  2048g/B8C66E6D 2009-03-17
+
+Once you are satisfied the key is authentic you can import it:
+
+	# rpm --import RPM-GPG-KEY-elrepo.org
+
+
+Page last modified on Tuesday 05 of November, 2013 22:16:02 MST

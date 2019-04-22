@@ -1,0 +1,29 @@
+What is the www-data user?
+
+
+Answers:
+
+For security.
+
+The files are not world writeable. They are restricted to the owner of the files for writing.
+
+The web server has to be run under a specific user. That user must exist.
+
+If it were run under root, then all the files would have to be accessible by root and the user would need to be root to access the files. With root being the owner, a compromised webserver would have access to your entire system. By specifying the specific ID a compromised server would only have full access to the server.
+
+If you decide to run it under a different user ID, then that user would need to be the effective owner of the files for proper privileges. It could be confusing to have personal ownership of system-wide files to your personal account.
+
+Creating a specific user would make it easier to recognize the files and consistent to recognize which ID to chown to new files and folders added to the site.
+
+The Userid or Name of the owner doesn't matter. Whatever is chosen or decided upon will have to be configured in the web server configuration files.
+
+By default the configuration of the owner is www-data in the Ubuntu configuration of Apache2. Since that is the default configuration, you conveniently know the ownership needed for your web files. If you change it, you would have to change the files in your site to match.
+
+I don't run Nqinx, but since it's in the Ubuntu repository, I'm sure it has been tested with the www-data configuration as default.
+
+shareimprove this answer
+answered Jan 19 at 16:30
+
+L. D. James
+11.5k31849
+

@@ -1,0 +1,30 @@
+How to change timezone on terminal command line
+
+	ref: https://wiki.archlinux.org/index.php?title=Time&oldid=231548
+	
+	
+	Be sure that /etc/localtime is linked to the correct zone file. 
+	
+	This is necessary not only for the localtime to be set correctly but also for other programs you may use. 
+	
+	
+	You can do this by:
+	
+		$ ls -l /etc/localtime
+	
+	
+	You can find the time zones listed in /usr/share/zoneinfo/ 
+	
+	and then you will need to find a major city that exists to your time zone. 
+		
+	If you live in a specialized time zone area these will be listed in sub-directories.
+	
+	
+	To change your time zone, link /etc/localtime to the new zone file:
+	
+		$ ln -sf /usr/share/zoneinfo/<Zone>/<SubZone> /etc/localtime
+	
+	
+	Example:
+	
+		$ ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime

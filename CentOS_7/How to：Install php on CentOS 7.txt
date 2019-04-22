@@ -1,0 +1,131 @@
+How to install php on CentOS 7
+
+
+	PHP is the component of our setup that will process code to display dynamic content. 
+	It can run scripts, connect to our MySQL databases to get information, 
+	and hand the processed content over to our web server to display.
+
+	We can once again leverage the yum system to install our components. 
+	We're going to include the php-mysql package as well:
+	
+	
+	1.Install php, php-mysql and phpMyAdmin
+	
+		$sudo yum -y install php php-mysql phpMyAdmin
+		
+		
+		This should install PHP without any problems. 
+	
+		We need to restart the Apache web server in order for it to work with PHP. 
+		You can do this by typing this:
+
+		
+	2.Restart httpd service
+	
+		$ sudo systemctl restart httpd.service
+		
+	
+	3.Testing PHP5 / Getting Details About Your PHP5 Installation
+	
+		The document root of the default website is /var/www/html. 
+		We will now create a small PHP file (info.php) in that directory and call it in a browser. 
+		The file will display lots of useful details about our PHP installation, 
+		such as the installed PHP version.
+		
+		$ vi /var/www/html/info.php
+
+		<?php
+		  phpinfo();
+		?>
+		
+		Now we call that file in a browser (e.g. http://x.x.x.x/info.php)
+		As you see, PHP5 is working, and it's working through the Apache 2.0 Handler, 
+		as shown in the Server API line. 
+		If you scroll further down, you will see all modules that are already enabled in PHP5. 
+		MySQL is not listed there which means we don't have MySQL support in PHP5 yet.
+		
+		
+	4.Getting MySQL Support In PHP5
+		
+		To get MySQL support in PHP, we can install the php-mysql package. 
+		It's a good idea to install some other PHP5 modules as well as you might need them for your applications. 
+		You can search for available PHP5 modules like this:
+		
+			$ yum search php
+
+		Pick the ones you need and install them like this:
+		
+		
+			$ yum -y install php-mysql
+
+		In the next step I will install some common PHP modules that are required by CMS Systems like Wordpress, 
+		Joomla and Drupal:
+		
+			$ yum -y install php-gd php-ldap php-odbc php-pear php-xml php-xmlrpc php-mbstring php-snmp php-soap curl curl-devel
+
+		Now restart Apache2:
+		
+			$ systemctl restart httpd.service
+
+		Now reload http://192.168.0.100/info.php in your browser and scroll down to the modules section again. 
+		You should now find lots of new modules like curl etc there.
+		
+		
+	5.phpMyAdmin installation
+
+		phpMyAdmin is a web interface through which you can manage your MySQL databases.
+		phpMyAdmin can now be installed as follows:
+	
+			$ yum install phpMyAdmin
+
+		Now we configure phpMyAdmin. We change the Apache configuration so that phpMyAdmin allows connections not just from localhost (by commenting out the <Directory "/usr/share/phpmyadmin"> stanza):
+		
+			$ vi /etc/httpd/conf.d/phpMyAdmin.conf
+
+			[...]
+			Alias /phpMyAdmin /usr/share/phpMyAdmin
+			Alias /phpmyadmin /usr/share/phpMyAdmin
+
+			#<Directory /usr/share/phpMyAdmin/>
+			#   <IfModule mod_authz_core.c>
+			#     # Apache 2.4
+			#     <RequireAny>
+			#       Require ip 127.0.0.1
+			#       Require ip ::1
+			#     </RequireAny>
+			#   </IfModule>
+			#   <IfModule !mod_authz_core.c>
+			#     # Apache 2.2
+			#     Order Deny,Allow
+			#     Deny from All
+			#     Allow from 127.0.0.1
+			#     Allow from ::1
+			#   </IfModule>
+			#</Directory>
+			
+			
+			<Directory /usr/share/phpMyAdmin/>
+					Options none
+					AllowOverride Limit
+					Require all granted
+			</Directory>
+			
+			[...] 
+			Next we change the authentication in phpMyAdmin from cookie to http:
+			vi /etc/phpMyAdmin/config.inc.php
+			
+			[...]
+			$cfg['Servers'][$i]['auth_type']     = 'http';    // Authentication method (config, http or cookie based)?
+			[...]
+			
+			
+		Restart Apache:
+
+			$ systemctl restart  httpd.service
+
+		Afterwards, you can access phpMyAdmin under http://192.168.0.100/phpmyadmin/:
+		
+		
+		
+		
+		

@@ -1,0 +1,15 @@
+How to install latest version of eclipse on CentOS 7
+
+	1.Install java development kit
+		
+		$ yum install java-1.8.0-openjdk java-1.8.0-openjdk-devel
+		
+		
+	2.Check if java installed
+	
+		$ java -version
+		
+		
+	3.Download latest version of eclipse
+	
+		http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/neon/2/eclipse-jee-neon-2-linux-gtk-x86_64.tar.gz

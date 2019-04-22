@@ -1,0 +1,67 @@
+使用 jq 查詢 json file 的內容：
+
+
+0. k8s-config.json 內容如下：
+
+	{
+	  "masters": [
+	  	{
+	  	"id": "k8s-master1",
+	  	"IP": "10.10.1.81"
+	  	}, {
+	  	"id": "k8s-master1",
+	  	"IP": "10.10.1.82"
+	  	}
+	  ],
+	  "nodes": [
+	  	{
+	  	"id": "k8s-node1",
+	  	"IP": "10.10.1.83"
+	  	}, {
+	  	"id": "k8s-node2",
+	  	"IP": "10.10.1.84"
+	  	}
+	  ],
+	  "proxy": [
+	  	{
+	  	"id": "k8s-proxy",
+	  	"IP": "10.10.1.85"
+	  	}
+	  ]
+	}
+
+
+1. 找出所有 masters 的指令：
+
+	$ arr=( $(jq -r '.masters[]' k8s-config.json) )
+	$ printf '%s\n' "${arr[@]}"
+
+	
+2. 找出所有 masters 中所有 id：
+
+	$ arr=( $(jq -r '.masters[].id' k8s-config.json) )
+	$ printf '%s\n' "${arr[@]}"
+
+	
+3. 找出所有 masters 中的 IP：
+
+	$ arr=( $(jq -r '.masters[].IP' k8s-config.json) )
+	$ printf '%s\n' "${arr[@]}"
+
+	
+4. 找出所有 masters 中 id 為 "k8s-master1" 的 IP 
+	
+	$ arr=( $(jq -r '.masters[] | select(.id=="k8s-master1") | .ip' k8s-config.json) )
+	$ printf '%s\n' "${arr[@]}"
+	
+	
+5. 使用環境變數的內容值來查詢：
+
+	$ HOSTID=k8s-master1
+	$ arr=( $(jq -r --arg HOSTID "${HOSTID}" '.masters[] | select(.id==$HOSTID) | .ip' k8s-config.json) )
+	$ printf '%s\n' "${arr[@]}"
+	
+
+	
+	
+	

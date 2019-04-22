@@ -1,0 +1,47 @@
+How to chage Ubuntun hostname
+
+
+	Quick tutorial for those who want to change the Hostname in Ubuntu 16.04 Server without a restart.
+
+
+	1. To change hostname temporarily so it works until you reboot the machine:
+
+		In terminal / command console, run the command:
+
+		$ sudo hostname [new_hostname]
+
+
+	
+	2. To permanently change your computer name, you may edit the “/etc/hostname” and “/etc/hosts” files.
+
+		Open terminal and run command:
+
+		Before, check now hostname
+		$ hostnamectl status
+		
+		 Static hostname: [your_old_hostname]
+			   Icon name: computer-laptop
+				 Chassis: laptop
+			  Machine ID: 0c2922f13cf64a62a5bb690546dcb810
+				 Boot ID: 4e8ae873361c468fb506199244d8d1b9
+		Operating System: Ubuntu 16.04.2 LTS
+				  Kernel: Linux 4.8.0-36-generic
+			Architecture: x86-64
+
+			
+		You need to edit the new hostname in two files:
+
+		First, /etc/hosts
+		$ sudo nano /etc/hosts
+
+
+		Second, edit /etc/hostname or execute hostnamectl command
+
+		$ sudo nano /etc/hostname 
+		or
+		$ sudo hostnamectl set-hostname [your_new_hostname]
+		
+		
+		Finally, you need restart to effect with...
+	
+		$ sudo shutdown -r now

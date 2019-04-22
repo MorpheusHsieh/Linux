@@ -1,0 +1,34 @@
+How to create a sudo user on Ubuntu 16.04
+
+
+1.Add a username
+
+    $ sudo adduser [username]
+
+	正在新增使用者 `test' ...
+	增加新群組 `test' (1002) ...
+	正在新增新使用者 `test' (UID 1002) 到群組 `test' ...
+	正在新增家目錄 `/home/test' ...
+	正在從 `/etc/skel'複製檔案 ...
+	輸入新的 UNIX 密碼： 
+	再次輸入新的 UNIX 密碼： 
+	passwd：密碼已成功地變更
+	正在改變 test 的使用者訊息
+	請輸入新值，或直接按 ENTER 鍵以使用預設值
+		全名 []: 
+		房間號碼 []: 
+		工作電話 []: 
+		住家電話 []: 
+		其它 []: 
+	以上輸入的資料正確嗎？[Y/n] 
+
+	
+2.Use the usermod command to add the user to the sudo group.
+
+	$ sudo usermod -aG sudo [username]
+
+	
+3.Test sudo access on new user account
+
+	$ sudo ls -la /root
+	

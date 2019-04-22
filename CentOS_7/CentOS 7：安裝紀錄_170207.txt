@@ -1,0 +1,135 @@
+170206	
+		1.安裝 CentOS 7 作業系統，磁碟空間配置如下：
+		
+			a. BIOS Boot,	  2 MiB,	BIOS Boot	, 標準分割區
+			b. /boot	,	500 MiB,	ext4		, 標準分割區
+			c. swap		,	  2 GiB,	swap		, 標準分割區
+			d. / 		,    10 GiB, 	LVM  		, Volume Group: CentOS, 磁碟空間: 固定, 27.5 GiB
+
+		2. Linux 系統更新
+		
+			$ yum update
+		
+			
+		3.使管理者帳號具有執行 sudo 的能力
+		
+			$ su - root
+			輸入 root 的密碼
+
+			$ visudo
+			....(前面省略)....
+			root    ALL=(ALL)       ALL  <==找到這一行，大約在 82 行左右
+			vbird1  ALL=(ALL)       ALL  <==這一行是你要新增的！
+			....(前面省略)....
+
+			測試：
+			$ tail -n 1 /etc/shadow
+			tail: cannot open `/etc/shadow' for reading: Permission denied
+			因為不是 root 嘛！所以當然不能查詢 /etc/shadow
+
+			$  sudo tail -n 1 /etc/shadow <==透過 sudo
+			We trust you have received the usual lecture from the local System
+			Administrator. It usually boils down to these three things:
+
+				$1) Respect the privacy of others.  <==這裡僅是一些說明與警示項目
+				$2) Think before you type.
+				$3) With great power comes great responsibility.
+			
+			Password: <==輸入管理者的蜜碼
+			pro3:$1$GfinyJgZ$9J8IdrBXXMwZIauANg7tW0:14302:0:99999:7::: 
+			
+			
+170207	
+		1.為了使 CentOS 的網路可以正常運作，編輯了 3個檔案。
+		
+			a. /etc/sysconfig/network-scripts/ifcfg-ens33
+			b. /etc/sysconfig/network
+			c. /etc/resolve.conf
+			
+		  並執行下列指令：
+		  
+		    $ systemctl disable NetworkManager.service
+			$ systemctl stop NetworkManager.service
+			$ chkconfig network --list
+			$ systemctl start network
+			
+		2.安裝 wget，以利後續從網路下載其他需要的套件
+		
+		
+		3.安裝第三方伺服器套件庫，包含 EPEL, RPM fusion 和 ELrepo
+		
+			$ yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+			
+			$ yum install https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-7.noarch.rpm
+			
+			$ rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+			$ rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
+
+			
+		4.更改 hostname (範例為 Centos7)
+		
+			a. 編輯 /etc/hosts 檔
+				
+				$ vi /etc/hosts 
+				:
+				127.0.0.1 CentOS7 localhost localhost.localdomain
+
+			b. 編輯 /etc/sysconfig/network 檔案
+				
+				$ vi /etc/sysconfig/network
+				
+				增加底下內容：
+				NETWORKING=yes
+				HOSTNAME=Centos7
+				GATEWAY=192.168.220.2 (VMware 中 VMnet8 的 GATEWAY IP ADDR)
+
+			c. 執行 hostname 命令一次，並使用 hostname 命令確認。
+			
+				$ hostname Centos7
+				$ [xxxxx@Centos7 ~]$ hostname
+				Centos7
+				
+			d. 重新登入, 命令提示字串就會改 [xxxxx@Centos7 ~]
+		
+		
+		5.關閉 selinux
+
+			SELinux 主要是對檔案系統的細部權限進行設定，所以想要使用 SELinux 配置前，
+			必須要對 Linux 的檔案系統以及基礎的作業系統概念要很清楚。
+			否則將會使得很多網路服務無法正確的啟用系統資源，導致主機很多服務無法存取系統資料！
+			因此，對於剛接觸 Linux 架站的朋友來說，建議先關閉 SELinux，
+			等到對 Linux 系統的檔案系統有很深刻的概念後，再來嘗試配置 SELinux。
+			
+			請將 /etc/sysconfig/selinux 中 SELINUX=enforcing 改成 SELINUX=disabled，再重開機就可以了！
+
+			$ vi /etc/sysconfig/selinux
+			#....
+			#SELINUX=enforcing (前面加 #)
+			SELINUX=disabled
+			#.....
+			
+			$ reboot
+
+			如何查看目前系統的 SELinux 狀態?
+			
+			$ sestatus
+			
+			
+		6. 關閉 firewalld.service (非必要)
+
+			$ systemctl disable firewalld.service
+			$ systemctl stop firewalld.service
+		
+		
+		7. 安裝 vim 編輯軟體
+		
+			$ yum -y install vim
+		
+		
+至此完成基本的 CentOS 設定。
+
+
+		
+		
+		
+		

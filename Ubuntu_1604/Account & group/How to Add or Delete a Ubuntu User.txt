@@ -1,0 +1,83 @@
+How to Add or Delete a Ubuntu user
+
+1.How To Add a User
+
+	If you are signed in as the root user, you can create a new user at any time by typing:
+
+		$ sudo adduser newuser
+
+	
+2.How To Grant a User Sudo Privileges
+
+	You can see what groups your new user is in with the groups command:
+
+		$ groups newuser
+		
+		Output
+		newuser : newuser
+
+	By default, a new user is only in their own group, 
+	
+	which is created at the time of account creation, and shares a name with the user. 
+	
+	In order to add the user to a new group, we can use the usermod command:
+
+		$ sudo usermod -aG sudo newuser
+	
+	The -aG option here tells usermod to add the user to the listed groups.
+	
+
+3.Specifying Explicit User Privileges in /etc/sudoers
+	
+	If you are signed in using a non-root user with sudo privileges, type:
+
+		$ sudo visudo
+		
+	
+	Traditionally, visudo opened /etc/sudoers in the vi editor, 
+	
+	which can be confusing for inexperienced users. 
+	
+	By default on new Ubuntu installations, it should instead use nano, 
+	
+	which provides a more familiar text editing experience. 
+	
+	Use the arrow keys to move the cursor, and search for the line that looks like this:
+
+		$ /etc/sudoers
+		root    ALL=(ALL:ALL) ALL
+		
+		
+	Below this line, copy the format you see here, 
+	
+	changing only the word "root" to reference the new user that you would like to give sudo privileges to:
+
+		$ /etc/sudoers
+
+		root    ALL=(ALL:ALL) ALL
+		newuser ALL=(ALL:ALL) ALL
+
+	
+4.How To Delete a User
+
+	You can delete the user itself, without deleting any of their files, by typing this as root:
+
+		$ sudo deluser newuser
+		
+	
+	If, instead, you want to delete the user's home directory when the user is deleted, 
+	
+	you can issue the following command as root:
+	
+		$ sudo deluser --remove-home newuser
+
+
+	If you had previously configured sudo privileges for the user you deleted, 
+	
+	you may want to remove the relevant line again by typing:
+
+		$ sudo visudo
+		
+		root    ALL=(ALL:ALL) ALL
+		newuser ALL=(ALL:ALL) ALL   # DELETE THIS LINE
+	

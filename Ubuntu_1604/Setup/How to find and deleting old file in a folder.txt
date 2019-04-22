@@ -1,0 +1,15 @@
+How to find and deleting old file in a folder 
+
+
+	$ find /path/to/directory/* -mtime +t -exec rm {} \;
+	
+	or
+	
+	$ find /path/to/directory/[filename prefix]* -mtime +t -exec rm {} \;
+	
+	
+	where +t means the number of days before today, 
+	
+	i.e., if you want to delete files a week ago, then you should write +6.
+
+

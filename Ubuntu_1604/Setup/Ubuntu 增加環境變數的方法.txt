@@ -1,0 +1,12 @@
+到 /etc/environment 檔案中增加，並讀取設定
+
+	$ sudo nano /etc/environment
+	
+	...
+	JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+	...
+	
+	$ source /etc/environment
+	
+	$ echo $JAVA_HOME
+	/usr/lib/jvm/java-8-openjdk-amd64

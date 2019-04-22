@@ -1,0 +1,119 @@
+解決 Ubuntu 16.04 自動掛載 USB 後無法寫入的問題
+
+
+	因為 w95 FAT32 (LBA) 爲 早期 windows OS 規格，更改爲 b 或 7 的 xp 以後的 windows OS 規格，
+	Ubuntu 才支援。
+
+	解決方法：
+
+		1.重新格式化為 NTFS 磁碟格式
+		2.使用 fdisk 修改隨身碟的磁碟格式。
+
+
+	第 2 種方法的修改程序如下：
+
+
+1.移除 USB 隨身碟後查看磁碟狀態：
+
+
+		$ sudo fdisk -l
+		
+		Disk /dev/sda: 465.8 GiB, 500107862016 bytes, 976773168 sectors
+		Units: sectors of 1 * 512 = 512 bytes
+		Sector size (logical/physical): 512 bytes / 4096 bytes
+		I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+		Disklabel type: gpt
+		Disk identifier: B5FAC32C-98B4-4E04-94C0-D779932A4F55
+
+		所用裝置       Start    結束    磁區   Size 類型
+		/dev/sda1       2048   1050623   1048576   512M EFI System
+		/dev/sda2    1050624 969066495 968015872 461.6G Linux filesystem
+		/dev/sda3  969066496 976771071   7704576   3.7G Linux swap
+
+	
+2.插入 USB 隨身碟後再次查看磁碟狀態：
+
+		$ sudo fdisk -l
+
+		Disk /dev/sda: 465.8 GiB, 500107862016 bytes, 976773168 sectors
+		Units: sectors of 1 * 512 = 512 bytes
+		Sector size (logical/physical): 512 bytes / 4096 bytes
+		I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+		Disklabel type: gpt
+		Disk identifier: B5FAC32C-98B4-4E04-94C0-D779932A4F55
+
+		所用裝置       Start    結束    磁區   Size 類型
+		/dev/sda1       2048   1050623   1048576   512M EFI System
+		/dev/sda2    1050624 969066495 968015872 461.6G Linux filesystem
+		/dev/sda3  969066496 976771071   7704576   3.7G Linux swap
+
+
+		Disk /dev/sdb: 14.7 GiB, 15812526080 bytes, 30883840 sectors
+		Units: sectors of 1 * 512 = 512 bytes
+		Sector size (logical/physical): 512 bytes / 512 bytes
+		I/O size (minimum/optimal): 512 bytes / 512 bytes
+		Disklabel type: dos
+		Disk identifier: 0xa1aea324
+
+		所用裝置   可開機 Start   結束   磁區  Size Id 類型
+		/dev/sdb1         19056 30883838 30864783 14.7G  7 HPFS/NTFS/exFAT
+		
+		
+	可以看到新增加了隨身碟的資訊，也就是 /dev/sdb 的資訊，掛載為 /dev/sdb1。
+	在範例中的磁碟格式為 NTFS，一般來說是可以正常讀寫的，
+	只有在磁碟格式為 FAT32 (LBA) 時才會有 Ubunut 自動掛載後無法讀寫的問題。
+
+
+3.更改磁碟格式：
+
+	a.使用 fdisk 指令修改 USB 隨身碟
+	
+		$ sudo fdisk /dev/sdb
+
+
+		Welcome to fdisk (util-linux 2.27.1).
+		Changes will remain in memory only, until you decide to write them.
+		Be careful before using the write command.
+
+
+		命令 (m 以獲得說明)： 
+
+
+	b.以參數 t 作修改： 
+
+			命令 (m 以獲得說明)： t
+			Selected partition 1
+			Partition type (type L to list all types): 
+
+	  輸入 l 後會出現清單：
+
+			Partition type (type L to list all types): l
+	
+			...
+			 7  HPFS/NTFS/exFAT 4d  QNX4.x          88  Linux 純文字  	 de  Dell 公用程式  
+			 8  AIX             4e  QNX4.x 第二部分 8e  Linux LVM     	 df  BootIt         
+			 9  AIX 可開機      4f  QNX4.x 第三部分 93  Amoeba        	 e1  DOS 存取       
+			 a  OS/2 開機管理員 50  OnTrack DM      94  Amoeba BBT   	 e3  DOS R/O        
+			 b  W95 FAT32       51  OnTrack DM6 Aux 9f  BSD/OS           e4  SpeedStor      
+			 c  W95 FAT32 (LBA) 52  CP/M            a0  IBM Thinkpad hi  ea  Rufus alignment
+			 e  W95 FAT16 (LBA) 53  OnTrack DM6 Aux a5  FreeBSD          eb  BeOS fs        
+			...
+		
+	  從清單中可以找到：
+
+			b # W95 FAT32			註1
+			c # W95 FAT32 (LBA)		註2
+			7 # HPFS/NTFS 			註3
+			83 # Linux 				(ext2 只有 ubuntu 可用)
+
+
+			註1 ：(xp vista win7 ubuntu 皆可用）有單一檔案 不可超過 4G 的限制。
+			註2 ：LBA(Logical Block Addressing)，一種用於 SCSI/EIDE 磁碟裝置的抽象定址模式。
+				  ATA-1 規範採用的 28位元 LBA 的計算容量上限達到 128 GiB。
+				  ATA-6 規範採用的 48位元 LBA，每磁區512位元組，計算容量上限可達128 Petabytes。
+			註3 ：一般在 ubuntu 可以讀取 但是要寫入時需要特別掛載指令或參數。
+
+
+	c.選擇 7，離開 fdisk 後，重新開機。
+
+

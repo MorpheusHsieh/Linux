@@ -1,0 +1,59 @@
+How to Upgrade Kernel to Latest Version in Ubuntu
+
+
+Step 1: Check Installed Kernel Version
+	
+	To find the current version of installed kernel on our system we can do:
+
+		$ uname -sr
+		
+	
+Step 2: Upgrading Kernel in Ubuntu	
+
+
+	To upgrade the kernel in Ubuntu, go to http://kernel.ubuntu.com/~kernel-ppa/mainline/ 
+	
+	and choose the desired version (Kernel 4.12 is the latest at the time of writing) 
+	
+	from the list by clicking on it.
+
+	Next, download the .deb files for your system architecture, ex: v4.13.3
+	
+		$ cd ~/
+		$ mkdir kernel
+		$ cd kernel 
+		$ wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.13.3/linux-headers-4.13.3-041303_4.13.3-041303.201709200606_all.deb
+		$ wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.13.3/linux-headers-4.13.3-041303-generic_4.13.3-041303.201709200606_amd64.deb
+		$ wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.13.3/linux-image-4.13.3-041303-generic_4.13.3-041303.201709200606_amd64.deb
+		
+	Once you’ve downloaded all the above kernel files, now install them as follows:
+
+		$ sudo dpkg -i *.deb
+
+	Once the installation is complete, reboot your machine and verify that the new kernel version is being used:
+
+		$ sudo reboot
+		$ uname -sr
+
+	And that’s it. You are now using a much more recent kernel version than the one installed by default with Ubuntu.
+
+		
+Summary
+
+	In this article we’ve shown how to easily upgrade the Linux kernel on Ubuntu system. 
+	
+	There is yet another procedure which we haven’t showed here as it requires compiling the kernel from source, 
+	
+	which is not recommended on production Linux systems.
+
+	If you’re still interested in compiling the kernel as a learning experience, 
+	
+	you will get the instructions on how to do it at the Kernel Newbies page.
+
+	As always, feel free to use the form below if you have any questions or comments about this article.
+
+	
+PS:	在更新 kernel 後，PHP mongodb extension driver 會不見，要重新安裝。
+	
+	
+	

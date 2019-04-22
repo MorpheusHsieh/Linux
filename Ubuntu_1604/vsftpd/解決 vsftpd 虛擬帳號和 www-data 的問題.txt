@@ -1,0 +1,75 @@
+解決 vsftpd 虛擬帳號和 www-data 的問題
+
+																				
+
+	在一般的 vsftpd 教學中，會建立一個 vsftpd 的實體用戶隸屬於 nogroup。指令如下：
+	
+		
+		$ sudo useradd --home /home/vsftpd --gid nogroup -m --shell /bin/false vsftpd
+		
+	
+	然後建立許多個虛擬用戶，例如 apache 帳號，指令如下：
+	
+		
+		$ sudo mkdir /etc/vsftpd
+		$ sudo htpasswd -cd /etc/vsftpd/ftpd.passwd apache
+	
+	
+	讓虛擬用戶可以運用 vsftpd 的權限來上傳檔案。
+		
+	在 Ubuntu 環境下，你可能會希望將虛擬帳戶的目錄存取能力限制某個特定目錄，例如 /var/www/apache。
+	
+
+	這個方法可能會碰到一個問題，那就是：
+	
+	要讓 apache 虛擬用戶上傳資料到 /var/www/apache，需要將目錄擁有者設為 vsftpd:nogroup，
+	
+	且目錄存取權限設定為 755。指令如下：
+	
+
+		$ sudo chown -R vsftpd:nogroup /var/www/apache
+		$ sudo chown -R 755 /var/www/apache
+		
+	
+	這樣一來，會使得 /var/www/apache 目錄無法被網路用戶瀏覽，例如 www-data。
+	
+	要讓/var/www/apache 目錄內容可以被網路用戶瀏覽，且不改變目錄存取權限為 755 的情況下，
+	
+	必須將目錄擁有者改為 www-data:www-data。指令如下：
+	
+		
+		$ sudo chown -R www-data:www-data /var/www/apache
+	
+	
+	但這樣一來，又會使得 apache 虛擬用戶無法上傳檔案。
+	
+	為了解決在使用 vsftpd 上傳網站到遠端伺服器時，
+	
+	當 apache 虛擬帳戶可以上傳檔案時網頁內容無法被瀏覽，
+	
+	或是當網頁可以瀏覽時， apache 虛擬用戶無法上傳檔案的問題。
+		
+	我想出了，將 vsftpd 實體帳戶隸屬於 www-data 群組，
+	
+	將 /var/www/apache 目錄的擁有者設定為 www-data:www-data，
+
+	以及將 /var/www/apache 目錄存取權限設定為 775 的方法。
+	
+	指令如下：
+	
+	
+		$ sudo usermod -aG www-data vsftpd
+		$ sudo chown -R www-data:www-data /var/www/apache
+		$ sudo chmod 775 /var/www/apache
+	
+
+	經實測結果，以 apache 虛擬帳戶 ftp 進入系統時可以上傳檔案，也可以透過瀏覽器瀏覽網頁。
+	
+		
+	
+	
+	
+	
+	
+	
+	

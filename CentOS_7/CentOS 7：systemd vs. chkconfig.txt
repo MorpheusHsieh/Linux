@@ -1,0 +1,114 @@
+CentOS 7: systemd vs. chkconfig
+
+以前只要使用 chkconfig 就可操作服務的生死，例如：
+
+	# service httpd start
+	# /etc/init.d/httpd start
+	# chkconfig --list
+	# chkconfig httpd on
+	
+
+然而，在 CentOS 7 中服務不再是由 init 負責，而是 systemd。傳統的 runlevel 也改為 target。
+
+雖然說 chkconfig 在 CentOS7 還是可以使用，但熟悉新的 systemd 命令也是必要的。
+
+在 systemd 中啟動檔已經不放在 /etc/rc.d/init.d/ 裡，而是改放在 /etc/systemd/system。
+
+而在 /etc/systemd/system 裡也只放已被 enable 的部分，並且是從 /usr/lib/systemd/system/ 鏈結 (link) 過來的。
+
+
+List all of services (列出全部服務)
+
+	chkconfig:
+
+		# chkconfig --list
+
+	systemd:
+
+		# systemctl list-units
+
+	
+Enable a service (開機啟用服務)
+
+	chkconfig:
+
+		# chkconfig <servicename> on
+
+	systemd:
+
+		# systemctl enable <servicename>.service
+
+
+
+Disable a service (開機關閉服務)
+
+	chkconfig:
+
+		# chkconfig <servicename> off
+
+	systemd:
+
+		# systemctl disable <servicename>.service
+
+
+Start a service
+
+	chkconfig:
+
+		# service <servicename> start
+
+	systemd:
+
+		# systemctl start <servicename>.service
+
+
+
+Stop a service
+
+	chkconfig:
+
+		# service <servicename> stop
+
+	systemd:
+
+		# systemctl stop <servicename>.service
+
+		
+
+Check the status of a service (檢查服務狀態)
+
+	chkconfig:
+
+		# service <servicename> status
+
+	systemd:
+
+		# systemctl status <servicename>.service
+
+
+		
+列出可用的運作層級
+
+	# systemctl list-units --type target
+
+
+
+顯示目前系統預設運作層級
+
+	# systemctl get-default
+
+	如果顯示 multi-user.target，就以前的 runlevel 3
+
+	而 graphical.target 為 runlevel 5
+
+
+	
+切換運作層級至文字模式 runlevel 3
+
+	# systemctl isolate multi-user.target
+
+	
+
+設定開機啟動至文字模式 runlevel 3
+
+	# systemctl set-default multi-user.target

@@ -1,0 +1,25 @@
+How to install MariaDB on CentOS 7
+
+安裝 MariaDB
+
+	1.執行以下指令安裝 MariaDB:
+
+		$ yum install mariadb-server mariadb
+
+		
+	2.啟動及設定開機自動執行 MariaDB:
+
+		$ systemctl start mariadb
+		$ systemctl enable mariadb
+
+		
+	3.執行以下指令設定 MariaDB 的 root 密碼, 預設是空密碼, 所以建議盡快修改:
+
+		$ /usr/bin/mysql_secure_installation
+		
+		此時要先輸入預設密碼，然後才能設定新密碼。接下來，我都是選用預設值。
+
+		
+	4.完成後可以用測試一下 MariaDB 是否已經啟動:
+
+		$ mysql -u root -p
