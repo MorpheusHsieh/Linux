@@ -1,0 +1,29 @@
+Ubuntu 18.04 - Change timezone setup
+
+
+  You can change Ubuntu 18.04 timezone in following ways.
+  
+  1.dpkg-reconfigure
+  
+    (1).Run 'dpkg-reconfigure'
+  
+        $ sudo  dpkg-reconfigure tzdata
+        
+    (2).Select your 'Georaphic area', then press 'OK' button.
+
+        e.g. 'Asia'
+                
+    (3).Select your 'Time zone', then press 'OK' button.
+    
+        e.g. 'Taipei'
+        
+    Finished.
+        
+    
+    
+    
+  
+  
+  
+  
+  2.timedatectl
