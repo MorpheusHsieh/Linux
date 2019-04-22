@@ -12,8 +12,8 @@ Setup SSH with public key authentication
     
   3.Generate a new key pair.
   
-    You can use 'ssh-keygen' command to generate a new key pair. 
-    You also can use a old key pair, skip this step.
+    You can use 'ssh-keygen' command to generate a new key pair,
+    also can use a old key pair, if yes, skip this step.
     
     During the generation of public key pair, some question need to be answered, 
     you can press 'enter' key directly if you like to use default value.
