@@ -1,4 +1,5 @@
-How to change timezone on terminal command line
+Change timezone on terminal command line
+
 
 	ref: https://wiki.archlinux.org/index.php?title=Time&oldid=231548
 	
@@ -24,7 +25,6 @@ How to change timezone on terminal command line
 	
 		$ ln -sf /usr/share/zoneinfo/<Zone>/<SubZone> /etc/localtime
 	
-	
-	Example:
+	e.g.
 	
 		$ ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime

@@ -1,0 +1,104 @@
+Change network interface from dhcp to static IP
+
+Setting a static IP on Ubuntu 16.04 LTS
+
+
+    In general, we often use SSH to manage multiple remote server at the same time.
+    Therefore, we need to setting static IP address for these remote servers 
+    to prevent the question of have no idea about connecting which IP address.
+    
+    For this goal, we need to edit network config file in following steps:
+    
+    
+    1.Open network interfaces configuration file:
+    
+        $ sudo nano /etc/network/interfaces
+        [sudo] password for user:
+    
+        
+        The file should look similar to the one below:
+        
+            # This file describes the network interfaces available on your system
+            # and how to activate them. For more information, see interfaces(5).
+            
+            source /etc/network/interfaces.d/*
+            
+            # The loopback network interface
+            auto lo
+            iface lo inet loopback
+            
+            # The primary network interface
+            auto enp0s3
+            iface enp0s3 inet dhcp
+        
+        
+        In last row, the 'enp0s3' is the network interface name, 'dhcp' (Dynamic 
+        Host Configuration Protocol) means the IP address of this network interface
+        was obtained randomly.
+    
+        
+    2.Change network interface from DHCP to static IP
+        
+        In this step, we need to disable dhcp command line,
+        and add static IP configuration.
+        
+        For disable dhcp, we just put '#' mark at the head of row.
+        
+        For add static IP configuration, we need to append For add static IP 
+        configuration, we need to append multiple command lines into file, 
+        included IP address, netmask, gateway, broadcast and dns-nameserver.
+        
+        Here is an example of a static IPv4 address 192.168.100.11 on the first 
+        network interface enp0s3 and gateway IP 192.168.100.1.
+        The server will use the free Google DNS servers 8.8.8.8 and 8.8.4.4 to for 
+        name resolving.
+    
+        The content should look similar to the one below:
+    
+            source /etc/network/interfaces.d/*
+            
+            # The loopback network interface
+            auto lo
+            iface lo inet loopback
+            
+            # The primary network interface
+            auto enp0s3
+            #iface enp0s3 inet dhcp
+            iface enp0s3 inet static
+                address   192.168.100.11/24
+                netmask   255.255.255.0
+                gateway   192.168.100.1
+                broadcast 192.168.100.255
+                dns-nameserver 192.168.100.1 8.8.8.8
+            
+    
+    3.Add hosts
+    
+        (1).Query hostname
+        
+            $ cat /etc/hostname
+            [your hostname]
+            
+        (2).Append hostname and IP address
+        
+            $ sudo nano /etc/hosts
+            
+            Append static IP address and hostname into file, 
+            it should look like as follow:
+
+            
+                127.0.0.1       localhost
+                127.0.1.1       [your hostname]
+                192.168.100.15  [your hostname]
+                
+            
+            Save and quit the editor.
+        
+    
+    4.Restart networking service
+    
+        $ sudo /etc/init.d/networking restart
+        [sudo] password for user: 
+        [ ok ] Restarting networking (via systemctl): networking.service.
+    
+    

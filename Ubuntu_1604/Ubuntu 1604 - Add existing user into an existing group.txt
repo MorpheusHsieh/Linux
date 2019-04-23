@@ -1,0 +1,14 @@
+Add existing user into an existing group
+
+
+    1.List of Groups on ubuntu server
+        
+        $ cat /etc/group
+    
+    
+    2.To add a user to a specific group use	
+    
+        $ sudo usermod -a -G groupName userName
+        
+        $ sudo usermod -G name-of-group -a 'name-of-user'
+	
