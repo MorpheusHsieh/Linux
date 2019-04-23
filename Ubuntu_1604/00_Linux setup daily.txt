@@ -2,6 +2,6 @@
             2.Generate RSA public key pair
             3.Setup SSH with public key authentication.
             
-190422      1.Install docker-ce 17.05.0
+190422      1.Install docker-ce 17.05.0 on Ubuntu 16.04 LTS
             2.The study of install MQTT broker on docker
             
