@@ -1,0 +1,22 @@
+Keep Ubuntu running when laptop lid is closed
+
+
+    1.Edit '/etc/systemd/logind.conf' file
+    
+        $ sudo nano /etc/systemd/logind.conf
+        
+    2.Change laptop lid configuration
+    
+        (1).Find 'HandleLidSwitch' parameter:
+        
+            '#HandleLidSwitch=suspend'
+        
+        (2).Remove '#' mark and change its value as below:
+        
+            HandleLidSwitch=ignore
+    
+    3. Reboot
+    
+        $ sudo reboot
+
+
