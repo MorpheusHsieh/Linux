@@ -1,0 +1,138 @@
+Folder share between Host Win7 and Guest Ubuntu 18.04 LTS 
+
+
+    1.Outline
+      
+      Sometimes, we are used to use Windows as host OS and need to deploy 
+      service or develop software system on Linux OS. 
+      
+      For this goal, VirtualBox is one of good option. 
+      
+      VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for
+      enterprise as well as home use. It allows us to run multiple guest 
+      operating systems on one host computer. 
+      
+      We maybe need to back up some file during constructing system architecture.
+      
+      One of simple way of back up is synchronize the file from host OS to guest 
+      OS. Therefore, folder share between host OS and guest OS will be useful.
+      
+      This article will provide the steps of how to build shared folder between
+      windows 7 (Host OS) and Ubuntu 18.04 LTS (Guest OS).
+      
+      In this article, we assume that an Ubuntu 18.04 LTS had created as the 
+      virtual machine (VM) named as ‘U1804S’, and a non-root account 'user' had
+      added.
+    
+    
+    2. The steps of folder share on Windows
+    
+        (1). Open ‘settings’ window of VM.
+        
+        (2). Select ‘Shared Folders’ item.
+        
+        (3). Adds new shared folder. 
+        
+        (4). Then ‘Add Share’ window appears.
+    
+        (4). Key-in the parameters of ‘shared folders’.
+        
+            There are three parameters need to write which are 'Folder path', 
+            'Folder Name' and 'Mount point'. 
+            
+            'Folder path' means the shared folders on host OS. 
+            'Folder Name' means a alias of host OS shared folder, we will explain later. 
+            'Mount point' means the shared folders on guest OS.
+        
+            For convenience purposes, we named they as 'HostFolder', 
+            'MappingFolder' and 'GuestFolder' respectively.
+        
+            After fill out all parameters, also checked 'Auto-mount' item.
+    
+        Here, we finished the setup steps of shared folders of VirtualBox on 
+        Windows environment.
+    
+    
+    3. The steps of shared folder on Ubuntu
+    
+        (1).Install ‘VirtualBox Guest Additions’ package.
+            
+            There are two ways can use to install 'VirtualBox Guest Additions'
+            package, the first is using 'apt-get' command, the second is using
+            'guest addition ISO'.
+        
+            A.Using ‘apt-get’ command:
+                
+              Open a terminal window and typing command as below:
+        
+                $ sudo apt-get install virtualbox-guest-utils
+        
+            B.Using ‘guest addition ISO’
+        
+              First, we need to create a folder to mount the 'guest addition ISO' file.
+        
+              Second, we execute 'VBoxLinuxAdditions.run' file after the 
+              'guest addition ISO' will have mounted. 
+        
+              The detail commands as below:
+        
+                $ sudo mkdir -p /media/cdrom
+                $ mount /dev/cdrom /media/cdrom
+                $ cd /media/cdrom
+                $ sudo ./VBoxLinuxAdditions.run
+        
+        (2).Adds current account to ‘vboxsf’ group
+        
+            $ sudo usermod -aG vboxsf $(whoami)
+        
+        (3).Mount ‘Shared Folder’
+        
+            Before list the commands of this step, it's worth to mention that 
+            the guest OS can't know which folders were shared on the host OS, 
+            it is necessary to provide a mapping list in order to the guest OS 
+            want to mount its folders to connect with host folders.
+
+            Therefore, the Oracle VM VirtualBox Guest Additions provide one 
+            command line management interface “VBoxControl”. 
+            
+            “VBoxControl” have many functions, one of them is listing all shared folders. 
+            
+            The “VBoxControl sharedfolder list” command can list all mappings. 
+            
+            The list has two columns data in each row, one is index number, 
+            the other is the value of "Folder name" in fig 4. 
+            
+            This is why we assigned the value of “Folder name” in fig 4 as “MappingFolder”.
+        
+            The example of list all mappings as follow:
+        
+            A.Show “Shared Folder” list
+            
+              $ sudo VBoxControl sharedfolder list
+              Oracle VM VirtualBox Guest Additions Command Line Management Interface Version 5.2.18_Ubuntu
+              (C) 2008-2019 Oracle Corporation
+              All rights reserved.
+                
+              Shared Folder mappings (1):
+                
+              01 - MappingFolder
+                
+              The commands to mount host folders to connect with guest folders is as follows:
+        
+            B.Mount guest folder to host folder
+        
+              $ cd /home/user/
+              $ sudo mkdir GuestFolder
+              $ sudo chown user:vboxsf GuestFolder
+              $ sudo chmod 775 GuestFolder
+              $ sudo mount -t vboxsf MappingFolder /home/user/GuestFolder
+        
+              After mounted shared folder, you can touch a new empty file for test.
+        
+                $ cd /home/user/GuestFolder
+                $ touce test.txt
+        
+              If you want to umount shared folders is as below:
+              
+                $ sudo umount -t vboxsf /home/user/GuestFolder
+              
