@@ -1,0 +1,71 @@
+Setting the tab size in nano
+
+    Nano is a text editor used on Linux based systems.
+    
+    Its default tab size is 8 spaces, but it is possible to change the tab size.
+    
+    There are three methods can change the tab size which are command line, 
+    system configuration file and user configuration file.
+    
+    We will setting tab size from 8 to 4 spaces as example to demo these methods.
+
+    1.Command line
+    
+      $ nano -T 4 /path/to/file
+      
+      or 
+      
+      $ nano --tabsize 4 /path/to/file
+    
+    2.User configuration file
+    
+        (1).Edit "~/.nanorc" file
+      
+            $ nano ~/.nanorc
+
+        (2).Adds two rows of content as follows:
+      
+            set tabsize 4
+            set tabstospaces
+        
+        (3).Save and Quit.
+    
+    3.System configuration file
+    
+      If current account need to use 'sudo' instruction to edit files that are 
+      belong to root privilege, the second methods wiil be not working. 
+      
+      Because 'sudo' doesn't use the configuration settings of non-root account, 
+      we need to add settings to system configuration, i.e. '/etc/nanorc'.
+      
+      The steps as follows:
+      
+        (1).Edit /etc/nanorc
+        
+            $ sudo nano /etc/nanorc
+            
+        (2).Change tabsize
+        
+            Find "# tabsize 8" string.
+            
+            Change as:
+            
+                set tabsize 4
+            
+            
+        (3).Change tab as spaces
+        
+            Find "# set tabstospaces"
+            
+            Change as:
+            
+                "set tabstospace"
+                
+        (4).Save and Quit.        
+                
+        
+        
+        
+        
+    
+    
