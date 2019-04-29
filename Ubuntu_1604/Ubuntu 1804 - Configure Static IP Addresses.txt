@@ -1,0 +1,87 @@
+Ubuntu 1804 - Configure Static IP Addresses
+
+
+    Since Ubuntu 17.10 introduced a new network configuration tool 'NetPlan' to 
+    manage network settings, Ubuntu 18.04 and 16.04 have completely different 
+    network interface configuration methods.
+
+    If you have heard of NetPlan, you’re a step ahead of many. 
+    
+    If not, don't worry, we will introduce how to configure static IP address 
+    in Ubuntu 18.04 LTS.
+    
+    
+    1.Find out the default network configuration file:
+    
+      $ ls /etc/netplan/
+      50-cloud-init.yaml
+      
+      As seen, the default network configuration file is '50-cloud-init.yaml'
+      and it is a YAML file.
+      
+      
+    2.Check the contents of this file:
+    
+    
+      $ sudo nano /etc/netplan/50-cloud-init.yaml
+      
+      The content should look like the one below:
+
+        # This file is generated from information provided by
+        # the datasource.  Changes to it will not persist across an instance.
+        # To disable cloud-init's network configuration capabilities, write a file
+        # /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg with the following:
+        # network: {config: disabled}
+        network:
+            ethernets:
+                enp0s3:
+                    dhcp4: true
+            version: 2
+
+      
+      Here is an example of a static IPv4 address 192.168.100.11 on the network 
+      interface enp0s3 and gateway4 IP 192.168.100.1.
+      The nameserver will use the gateway4 and Google DNS servers 8.8.8.8 for 
+      name resolving.
+      
+      After edited, the content is as below:
+
+        # This file is generated from information provided by
+        # the datasource.  Changes to it will not persist across an instance.
+        # To disable cloud-init's network configuration capabilities, write a file
+        # /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg with the following:
+        # network: {config: disabled}
+        network:
+            ethernets:
+                enp0s3:
+                    addresses: [192.168.100.11/24]
+                    gateway4: 192.168.100.1
+                    nameservers:
+                        addresses: [192.168.100.1,8.8.8.8,8.8.4.4]
+                    dhcp4: no
+            version: 2
+
+
+    3.Save and Quit   
+    
+    
+    4.Testing the Configuration
+    
+      Before apply the change, let's test the configuration first.
+      Typing the command as below:
+
+        $ sudo netplan try
+        
+      This command will validate the configuration before applying it.
+      If it succeeds, the configuration will have accepted.
+      If it fail, system will automatically revert to the previous working 
+      configuration after 120 secs.  
+      
+      
+    5.Applying the New Configuration
+    
+      You also can directly to applying the new options. 
+      The command is as follows:
+    
+        $ sudo netplan apply
+        
