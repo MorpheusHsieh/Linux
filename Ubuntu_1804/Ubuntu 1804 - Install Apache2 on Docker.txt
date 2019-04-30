@@ -1,0 +1,86 @@
+Install Apache 2.4 on Docker
+
+
+    The Apache HTTP Server, also called Apache, is a Web server application and 
+    has remained the most popular HTTP server since April 1996.
+
+    In this article, we will install an Apache on Docker as a container to 
+    provide Web service.  
+    
+    Our plan list as follows:
+
+        1. Mapping port 8080 of host machine to port 80 of container.
+        
+        2. Mapping host directory '~/apache2/public-html/' to container directory 
+           '/usr/local/apache2/htdocs/'.
+        
+        3. The name of container is 'apache2'.
+
+    The detail steps list as follows:
+
+
+    1.Create host machine HTML directory
+    
+        $ mkdir -p ~/apache2/public-html
+        
+        
+    2.Pulling and run Apache2 container        
+    
+        $ docker run -dit --name apache2 \
+        -p 8080:80 \
+        -v ~/apache2/public-html/:/usr/local/apache2/htdocs/  \
+        httpd:2.4
+        
+        
+    3.List running container
+
+        $ docker ps
+        
+        CONTAINER ID        IMAGE               COMMAND              CREATED            STATUS              PORTS                  NAMES
+        1cebdef67689        httpd:2.4           "httpd-foreground"   30 minutes ago     Up 1 second         0.0.0.0:8080->80/tcp   apache2        
+        
+        
+    4.Test Apache Web service
+    
+        (1).Create a smple HTML page named 'docker.html'  
+      
+            $ nano ~/apache2/public-html/docker.html
+            
+        (2).Add the following HTML code to file.
+        
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>Apache2 on Docker</title>
+            </head>
+            <body>
+                <h1>Apache2 on Docker</h1>   
+            </body>
+            </html>
+            
+        (3).Save and Quit
+
+
+        (4).Brower the test page.
+        
+            We assume the IP address of docker of host machine is 192.168.100.100.
+            
+            Open a browser, input '192.168.100.100:8080/docker.html' on address bar.
+            
+            You should be presented with the page we created previously.
+            
+    5.Stop the container
+    
+        $ docker stop apache2
+        
+        
+    6.Start the container again
+
+        $ docker start apache2
+        
+        
+    7.Remove Apache2 image
+
+        $ docker rmi httpd:2.4
+            
