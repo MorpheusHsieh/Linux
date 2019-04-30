@@ -1,8 +1,8 @@
-Install MQTT Broker on Docker
+Install Docker MQTT Broker
 
     Docker is one of the most widely used container application. 
   
-    Docker MQTT Broker will help us have more control over our IoT enivoriment.
+    Docker MQTT Broker will help us have more control over our IoT envioriment.
   
     Maybe we can use the steps of this article to run the MQTT Broker on Docker 
     on the others system, e.g. Raspberry Pi 3, Amazon EC2, Google Cloud Platform 
