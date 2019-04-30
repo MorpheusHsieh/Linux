@@ -1,0 +1,136 @@
+1.Create dirs on host machine
+2.Run docker image as container
+
+
+
+
+sudo docker run -itd \
+--name="mosquitto" \
+--restart on-failure \
+-p 1883:1883 \
+-p 9001:9001 \
+-v /Users/adrian/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf \
+-v mosquitto_data:/mosquitto/data \
+-v mosquitto_data:/mosquitto/log \
+eclipse-mosquitto
+
+# Show docker containers
+$ docker container ls -a
+
+$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+eclipse-mosquitto   latest              0bbe14f95663        2 days ago          5.07MB
+ubuntu              latest              d131e0fa2585        2 days ago          102MB
+hello-world         latest              fce289e99eb9        3 months ago        1.84kB
+
+
+# Remove docker images
+$ docker image rm 0bbe14f95663 d131e0fa2585
+
+$ docker images -a
+$ docker images ps
+
+
+$ docker container rm 1b77f5d364d0
+$ docker image rm 0bbe14f95663
+
+# Create a docker container
+# docker create -it ubuntu:latest
+
+
+# Start a docker container
+$ docker start a58d0d84e173
+
+# Create and Start a docker container
+$ docker run ubuntu "/bin/echo" 'Hello world'
+
+# Run a container and enable a bash terminal to allow user to interactive input
+$ docker run -it ubuntu:latest /bin/bash
+
+
+$ mkdir ~/mosquitto
+$ mkdir ~/mosquitto/config
+$ mkdir ~/mosquitto/data
+$ mkdir ~/mosquitto/log
+$ nano ~/mosquitto/config/mosquitto.conf
+    
+    persistence true
+    persistence_location /mosquitto/data/
+    log_dest file /mosquitto/log/mosquitto.log
+
+
+$ docker run --name mqtt -itd \
+-p 1883:1883 -p 9001:9001 \
+-v ~/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf \
+eclipse-mosquitto
+
+
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                            NAMES
+ac9372d70202        eclipse-mosquitto   "/docker-entrypoint.…"   3 seconds ago       Up 2 seconds        0.0.0.0:1883->1883/tcp, 0.0.0.0:9001->9001/tcp   mosquitto
+
+
+$ docker exec -it ac9372d70202 /bin/ash
+
+
+$ docker run --name mqtt2 -itd \
+-p 1883:1883 -p 9001:9001 \
+-v ~/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf \
+-v mosquitto_data:/mosquitto/data \
+-v mosquitto_data:/mosquitto/log \
+eclipse-mosquitto
+
+$ docker ps -a
+CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS                     PORTS                    NAMES
+64b8229696f3        portainer/portainer   "/portainer"             25 minutes ago      Up 25 minutes              0.0.0.0:9000->9000/tcp   upbeat_goldwasser
+f6a32ee5ad6a        eclipse-mosquitto     "/docker-entrypoint.…"   30 minutes ago      Exited (0) 5 minutes ago                            mqtt2
+
+$ docker start f6a32
+
+using Chrome MQTTlens for test
+
+
+$ mosquitto_sub -t mqtt/docker/test
+
+$ docker container ls
+$ docker container ls -a
+
+
+$ docker run -itd -p 11883:1883 -p 9001:9001 \
+-v ~/mosquitto/:/mosquitto/ \
+--name mqtt eclipse-mosquitto
+
+# Enter docker 
+$ docker exec -it mqtt sh
+
+
+-------------------------------------------------------------------------------------------------
+Something is messed up with -v flag. If you don't need custom configs simply remove the flag:
+
+sudo docker run -it -p 11883:1883 -p 9001:9001 eclipse-mosquitto
+If you need, do the following:
+
+create /mosquitto/config/, /mosquitto/data/, /mosquitto/log/ dirs on your host machine
+put mosquitto.config in /mosquitto/config/. Don't forget about those options in config:
+persistence true
+persistence_location /mosquitto/data/
+log_dest file /mosquitto/log/mosquitto.log
+Now just simply execute
+
+# Notice that mosquitto is exposed on 11883 on host
+sudo docker run -it -p 11883:1883 -p 9001:9001 -v /mosquitto/:/mosquitto/ eclipse-mosquitto
+It all worked on a fresh Ubuntu Server 16.10 vm.
+-------------------------------------------------------------------------------------------------
+
+$ mkdir -p ~/mqtt/config
+$ mkdir -p ~/mqtt/data
+$ mkdir -p ~/mqtt/log
+
+$ docker volume create mqtt_data
+
+$ docker run -itd --name mqtt \
+-p 11883:1883 -p 9001:9001 \
+-v ~/mqtt/config:/mqtt/config:ro \
+-v ~/mqtt/log:/mqtt/log \
+-v mqtt_data:/mqtt/data \
+eclipse-mosquitto

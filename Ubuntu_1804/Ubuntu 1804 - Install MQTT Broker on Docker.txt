@@ -1,0 +1,131 @@
+Install MQTT Broker on Docker
+
+    Docker is one of the most widely used container application. 
+  
+    Docker MQTT Broker will help us have more control over our IoT enivoriment.
+  
+    Maybe we can use the steps of this article to run the MQTT Broker on Docker 
+    on the others system, e.g. Raspberry Pi 3, Amazon EC2, Google Cloud Platform 
+    or Microsoft Azure.
+  
+  
+    1.Create host machine diectorys
+    
+        $ mkdir -p ~/mqtt/config
+        $ mkdir -p ~/mqtt/data
+        $ mkdir -p ~/mqtt/log
+    
+    
+    2.Run Dokcer MQTT Broker
+    
+        $docker run -itd --name mqtt \
+        -p 11883:1883 -p 9001:9001 \
+        -v ~/mqtt/config:/mqtt/config:ro \
+        -v ~/mqtt/data:/mqtt/data \
+        -v ~/mqtt/log:/mqtt/log \
+        eclipse-mosquitto
+
+      If you are the first time to run Docker MQTT Broker, the image of Docker
+      MQTT Broker ('eclipse-mosquitto') will be pulling to local host machine. 
+      
+      During the process the message should look like as follows:
+
+        Unable to find image 'eclipse-mosquitto:latest' locally
+        latest: Pulling from library/eclipse-mosquitto
+        c87736221ed0: Pull complete 
+        999415f1293d: Pull complete 
+        49bdbb41aa39: Pull complete 
+        Digest: sha256:c7999d77b7aeb0245ff34a42536526c25f48ccec42e12a96a5f2febb5d145618
+        Status: Downloaded newer image for eclipse-mosquitto:latest
+        1a0e27ea40391c6ef0dfb334343c8fd05fe069785ffe03a4d73d59640b38683c
+
+      If the local repository of host machine already have same image, 
+      system will only display one 64-bytes hexadecimal string.
+
+      For example:
+
+        1a0e27ea40391c6ef0dfb334343c8fd05fe069785ffe03a4d73d59640b38683c
+
+        
+      If you want to check pulled images. Typing command 'docker images'
+        
+        $ docker images
+           
+        REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+        eclipse-mosquitto   latest              0bbe14f95663        3 days ago          5.07MB
+          
+          
+    3.List running Docker containers
+    
+      We can use 'docker ps' command to list all running contains.
+
+        $ docker ps
+        
+        CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                             NAMES
+        1a0e27ea4039        eclipse-mosquitto   "/docker-entrypoint.…"   19 minutes ago      Up 19 minutes       0.0.0.0:9001->9001/tcp, 0.0.0.0:11883->1883/tcp   mqtt
+
+      If you want to list all running and stopped containers, 
+      typing command as follows:
+        
+        $ docker ps -a
+            
+    
+    4.Stopped Docker container
+    
+      Just typing 'docker stop [CONTAINER ID]'. For example:
+        
+        $ docker stop 1a0e27ea4039
+        
+        
+      Check container has stopped.
+        
+        $ docker ps -a
+            
+        CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                     PORTS               NAMES
+        1a0e27ea4039        eclipse-mosquitto   "/docker-entrypoint.…"   33 minutes ago      Exited (0) 2 minutes ago      
+            
+    
+    5.Running container again.
+    
+        $ docker start 1a0e27ea4039
+        1a0e27ea4039
+
+      Check container is running.
+
+        $ docker ps
+        CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                             NAMES
+        1a0e27ea4039        eclipse-mosquitto   "/docker-entrypoint.…"   40 minutes ago      Up 2 seconds        0.0.0.0:9001->9001/tcp, 0.0.0.0:11883->1883/tcp   mqtt
+
+
+    6.Test
+    
+      For MQTT Broker test, there many ways to do this. 
+      We can use the other machine to publish or subscribe topic of the Dokcer 
+      MQTT Broker host machine. 
+      
+      Here we just provide the commands of publish and subscibe topic 
+      instructions as a example.
+
+        (1).Subscibe topic:
+        
+            We use topic 'test' as a example.
+            Open one terminal command line window and typing commmand:
+            
+                $ mosquitto_sub -t test
+        
+        (2).Publish message:
+        
+            We use topic 'test' and message 'From host' as a example.
+            Open another terminal command line window and typing commmand:
+            
+                $ mosquitto_pub -t test -m "From host"
+            
+            Then the first terminal window should have message 'From host'.
+            
+            If not, there is something wrong.
+            
+        
+     
+
+    
+    
