@@ -128,9 +128,10 @@ $ mkdir -p ~/mqtt/log
 
 $ docker volume create mqtt_data
 
-$ docker run -itd --name mqtt \
+$ docker run -itd \
 -p 11883:1883 -p 9001:9001 \
 -v ~/mqtt/config:/mqtt/config:ro \
+-v ~/mqtt/data:/mqtt/data \
 -v ~/mqtt/log:/mqtt/log \
--v mqtt_data:/mqtt/data \
+--name mqtt \
 eclipse-mosquitto
