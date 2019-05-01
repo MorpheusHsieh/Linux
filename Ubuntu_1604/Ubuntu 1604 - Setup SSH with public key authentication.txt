@@ -1,114 +1,139 @@
 Setup SSH with public key authentication
 
 
-  1.Login system using your account username and password.
-  
-  
-  2.Create SSH key directory and change mode
-  
-    $ sudo mkdir -p ~/.ssh
-    $ chome 700 ~/.ssh
+    1.Login system using your account username and password.
     
     
-  3.Generate a new key pair.
-  
-    You can use 'ssh-keygen' command to generate a new key pair.
-    If you want to use a old key pair, skip this step.
+    2.Create SSH key directory and change mode
     
-    During the generation of public key pair, some question need to be answered, 
-    you can press 'enter' key directly if you like to use default value.
-  
-      $ ssh-keygen
-  
-      
-        Generating public/private rsa key pair.
-        Enter file in which to save the key (/home/seal/.ssh/id_rsa):
+        $ sudo mkdir -p ~/.ssh
+        $ chome 700 ~/.ssh
         
-        Enter passphrase (empty for no passphrase):
         
-        Enter same passphrase again:
+    3.Generate a new key pair.
+    
+        You can use 'ssh-keygen' command to generate a new key pair.
+        If you want to use a old key pair, skip this step.
         
-        Your identification has been saved in /home/seal/.ssh/id_rsa.
-        Your public key has been saved in /home/seal/.ssh/id_rsa.pub.
-        The key fingerprint is:
-        c7:61:98:72:02:91:94:db:12:96:05:9d:59:91:aa:25 seal@seal-desktop
-        The key's randomart image is:
-        +--[ RSA 2048]----+
-        |   .=O.+oo       |
-        |    *.+ .o       |
-        |   . +o.+ o      |
-        |    E ++ o .     |
-        |     =  S o      |
-        |    .    .       |
-        |                 |
-        |                 |
-        |                 |
-        +-----------------+
-      
-    After key generation finished, two files, i.e. 'id_rsa' and 'id_rsa.pub', 
-    will have founded in '~/.ssh' directory.
-  
-      
-  3.Upload SSH public key to remote system
-  
-    'ssh-copy-id' command is a utility that can copy a public key to a remote server over SSH.
-  
-      $ ssh-copy-id [usernam]@[hostname]
+        During the generation of public key pair, some question need to be answered, 
+        you can press 'enter' key directly if you like to use default value.
     
-    If you like to use a specific public key copy to remote server, 
-    which need to provid the pathname and filename of the public key.
+        $ ssh-keygen
     
-    e.g.,
+        
+            Generating public/private rsa key pair.
+            Enter file in which to save the key (/home/seal/.ssh/id_rsa):
+            
+            Enter passphrase (empty for no passphrase):
+            
+            Enter same passphrase again:
+            
+            Your identification has been saved in /home/seal/.ssh/id_rsa.
+            Your public key has been saved in /home/seal/.ssh/id_rsa.pub.
+            The key fingerprint is:
+            c7:61:98:72:02:91:94:db:12:96:05:9d:59:91:aa:25 seal@seal-desktop
+            The key's randomart image is:
+            +--[ RSA 2048]----+
+            |   .=O.+oo       |
+            |    *.+ .o       |
+            |   . +o.+ o      |
+            |    E ++ o .     |
+            |     =  S o      |
+            |    .    .       |
+            |                 |
+            |                 |
+            |                 |
+            +-----------------+
+        
+        After key generation finished, two files, i.e. 'id_rsa' and 'id_rsa.pub', 
+        will have founded in '~/.ssh' directory.
     
-      $ ssh-copy-id -i ~/.ssh/id_rsa.pub [usernam]@[hostname]
+        
+    3.Upload SSH public key to remote system
     
-      
-  4.SSH to remote system for test.
+        'ssh-copy-id' command is a utility that can copy a public key to a remote server over SSH.
+    
+        $ ssh-copy-id [usernam]@[hostname]
+        
+        If you like to use a specific public key copy to remote server, 
+        which need to provid the pathname and filename of the public key.
+        
+        e.g.,
+        
+        $ ssh-copy-id -i ~/.ssh/id_rsa.pub [usernam]@[hostname]
+        
+        
+    4.SSH to remote system for test.
+    
+        Use 'ssh' command for test.
+        
+        $ ssh [username]@[hostname]
+        
+        If sccess, system will response message as follows:
+        
+        Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-131-generic x86_64)
+    
+            * Documentation:  https://help.ubuntu.com
+            * Management:     https://landscape.canonical.com
+            * Support:        https://ubuntu.com/advantage
+        ...
+        
+        If want to disconnect, just typing 'exit' command.
+        
+        $ exit
+        logout
+        Connection to xxxxxx closed.
+        
+        
+    5.Disable SSH password authentication.
+    
+        For safety reason, we can disable password authentication of SSH.
+        
+        (1).Edit /etc/ssh/sshd_config file
+        
+            $ sudo nano /etc/ssh/sshd_config
+        
+        (2).Disable password authentication
+        
+            Find follow string:
+            
+            #PasswordAuthentication yes
+            
+            Change as:
+            
+            PasswordAuthentication no
+            
+        (3).Enable pubkey authentication
+        
+            Find follow string:
+            
+            #PubkeyAuthentication no
+            
+            Change as:
+            
+            PubkeyAuthentication yes
+    
+    
+    6.Start, stop and restart SSH service
+    
+        (1).Restart SSH service
 
-    Use 'ssh' command for test.
-    
-      $ ssh [username]@[hostname]
-    
-    If sccess, system will response message as follows:
-    
-      Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 4.4.0-131-generic x86_64)
-  
-        * Documentation:  https://help.ubuntu.com
-        * Management:     https://landscape.canonical.com
-        * Support:        https://ubuntu.com/advantage
-      ...
-    
-    If want to disconnect, just typing 'exit' command.
-    
-      $ exit
-      logout
-      Connection to xxxxxx closed.
-      
-      
-  5.Disable SSH password authentication.
-  
-    For safety reason, we can disable password authentication of SSH.
-    
-    (1).Edit /etc/ssh/sshd_config file
-    
-        $ sudo nano /etc/ssh/sshd_config
-    
-    (2).Disable password authentication
-    
-        Find follow string:
-          
-          #PasswordAuthentication yes
-        
-        Change as:
-          
-          PasswordAuthentication no
-        
-    (3).Enable pubkey authentication
-    
-        Find follow string:
-          
-          #PubkeyAuthentication no
-        
-        Change as:
-          
-          PubkeyAuthentication yes
+            $ sudo systemctl restart ssh
+            
+        (2).Stop SSH service
+
+            $ sudo systemctl stop ssh
+            
+        (3).Start SSH service
+
+            $ sudo systemctl start ssh
+            
+        (4).Status of SSH service
+
+            $ sudo systemctl status ssh
+            
+            or
+            
+            $ sudo service ssh status
+            
+            

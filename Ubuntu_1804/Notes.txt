@@ -1,0 +1,49 @@
+docker run -itd --name mqtt \
+-p 1883:1883 -p 9001:9001 \
+-v ~/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro \
+eclipse-mosquitto
+
+
+docker run -itd \
+--name mqtt  \
+-p 1883:1883 \
+-p 9001:9001 \
+-v ~/mosquitto/config/mqtt.conf:/mosquitto/config/mosquitto.conf \
+eclipse-mosquitto
+
+
+docker run -itd \
+--name mqtt \
+-p 1883:1883 \
+-p 9001:9001 \
+-v ~/mosquitto/:/mosquitto/ \
+eclipse-mosquitto
+
+
+docker run -itd \
+--name mqtt   \
+-p 1883:1883 \
+-p 9001:9001  \
+-v ~/mqtt/:/mosquitto/ \
+eclipse-mosquitto
+
+
+docker run -it -p 1883:1883 -p 9001:9001 -v mosquitto.conf:/mosquitto/config/mosquitto.conf eclipse-mosquitto
+
+docker rm -f $(docker ps -aq)
+
+
+sudo lsof -i | grep TCP
+
+sudo lsof -t -i:1883
+
+sudo kill $(sudo lsof -t -i:1883)
+
+mosquitto_sub -v -t '#' 
+
+
+sudo apt-get remove mosquitto mosquitto-clients
+sudo apt-get remove --auto-remove mosquitto mosquitto-clients
+
+sudo apt-get purge mosquitto mosquitto-clients
+sudo apt-get purge --auto-remove mosquitto mosquitto-clients
