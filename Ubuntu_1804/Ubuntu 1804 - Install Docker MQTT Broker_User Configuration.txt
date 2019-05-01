@@ -1,23 +1,52 @@
-Install Docker MQTT Broker_Simplest
+Install Docker MQTT Broker_User Configuration
+
 
     Docker is one of the most widely used container application.
     
-    Since Docker MQTT Broker will help us have more control over our IoT environment, 
-    we will introduce how to setup MQTT broker on Docker.
+    We already have introduced to run a MQTT Broker Docker container in other article.
 
-    We expects the steps can suitable for other OS.
+    Sometimes, we may wish to configure MQTT architecture according to own idea.
+    At this moment, we need to use a custom configuration of Docker MQTT Broker.
+
+    In this article, we will introduce the custom configuration file.    
     
     
-    1.Create host machine diectory
+    1.Create host machine configuration file
     
-        $ mkdir -p ~/mosquitto
+      To use a custom configuration file, 
+      mount a local configuration file to the container's configuration file, 
+      i.e. 'mosquitto/config/mosquitto.conf', is necessary.
+      
+      Our local configration file also named 'mosquitto.conf' 
+      and the configuration directory struct as follows:
+      
+        - mosquitto
+            - config
+                - mosquitto.conf
+            - data
+            - log
+
+      We will make this struct and configuration file in account home directory, 
+      the command as follows:
+      
+        $ mkdir -p ~/mosquitto/config
+        $ mkdir -p ~/mosquitto/data
+        $ mkdir -p ~/mosquitto/log
+        $ nano ~/mosquitto/config/mosquitto.conf
+        
+      Add following content to 'mosquitto.conf' file:
+
+        persistence true
+        persistence_location /mosquitto/data/
+        log_dest file /mosquitto/log/mosquitto.log
         
         
     2.Run Docker MQTT Broker
     
-        $ docker run -itd --name mqtt \
-        -p 11883:1883 -p 9001:9001 \
-        -v ~/mosquitto/:/mosquitto/ \
+        $ docker run -itd \
+        -p 1883:1883 -p 9001:9001 \
+        -v ~/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf \
+        --name mqtt
         eclipse-mosquitto
         
     3.Enter dokcer container 
