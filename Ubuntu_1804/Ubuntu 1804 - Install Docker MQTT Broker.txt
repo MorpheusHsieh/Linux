@@ -1,5 +1,6 @@
 Install Docker MQTT Broker
 
+
     Docker is one of the most widely used container application. 
   
     Docker MQTT Broker will help us have more control over our IoT envioriment.
@@ -18,15 +19,17 @@ Install Docker MQTT Broker
     
     2.Run Dokcer MQTT Broker
     
-        $docker run -itd --name mqtt \
-        -p 11883:1883 -p 9001:9001 \
+        $ docker run -itd \
+        --name mqtt  \
+        -p 9001:9001 \
+        -p 1883:1883 \
         -v ~/mqtt/config:/mqtt/config:ro \
         -v ~/mqtt/data:/mqtt/data \
         -v ~/mqtt/log:/mqtt/log \
         eclipse-mosquitto
 
-      If you are the first time to run Docker MQTT Broker, the image of Docker
-      MQTT Broker ('eclipse-mosquitto') will be pulling to local host machine. 
+      If you are the first time to run Docker MQTT Broker, 
+      the image of 'eclipse-mosquitto' will be pulling to local host machine. 
       
       During the process the message should look like as follows:
 
