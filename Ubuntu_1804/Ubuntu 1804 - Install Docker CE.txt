@@ -1,0 +1,221 @@
+Install Docker CE on Ubuntu
+
+    Docker is one of the most widely used container application. 
+    
+    There are many different ways to install Docker.
+    
+        1.Install from Docker’s repositories, that is the recommended approach.
+        
+        2.Download the DEB package and install it manually.
+        
+        3.Use automated convenience scripts to install Docker.
+        
+    
+    In this article, we will introduce the step of first way, i.e. 'install using the repository'.
+
+    The step as follows:
+    
+ 
+    1.Update the apt package index:
+        
+        $ sudo apt-get update
+        
+            Hit:1 http://archive.ubuntu.com/ubuntu bionic InRelease
+            Get:2 http://archive.ubuntu.com/ubuntu bionic-updates InRelease [88.7 kB]
+            Get:3 http://archive.ubuntu.com/ubuntu bionic-backports InRelease [74.6 kB]
+            Get:4 http://archive.ubuntu.com/ubuntu bionic-security InRelease [88.7 kB]
+            Fetched 252 kB in 2s (102 kB/s)    
+            Reading package lists... Done
+
+    
+    2.Install packages to allow apt to use a repository over HTTPS:
+    
+        $ sudo apt-get install \
+        apt-transport-https \
+        ca-certificates \
+        curl \
+        gnupg-agent \
+        software-properties-common
+        
+            Reading package lists... Done
+            ...
+            Do you want to continue? [Y/n] y
+            ...
+        
+        
+    3.Add Docker’s official GPG key:
+    
+        $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        
+            OK
+        
+        
+    4.Verify if fingerprint exist or not:
+    
+        Our target fingerprint is '9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88'.
+        We can verify it is exist or not by searching for the last 8 characters
+        
+
+        $ sudo apt-key fingerprint 0EBFCD88
+        
+            pub   rsa4096 2017-02-22 [SCEA]
+            9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88
+            uid           [ unknown] Docker Release (CE deb) <docker@docker.com>
+            sub   rsa4096 2017-02-22 [S]
+
+        
+    5.Check your Ubuntu Version
+    
+        $ lsb-release -a
+
+            No LSB modules are available.
+            Distributor ID:	Ubuntu
+            Description:	Ubuntu 18.04.2 LTS
+            Release:	18.04
+            Codename:	bionic
+
+
+        $ lsb-release -cs
+
+            bionic
+
+
+    6.Set up the stable repository
+    
+        $ sudo add-apt-repository \
+        "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+        $(lsb_release -cs) \
+        stable"
+
+            Get:1 https://download.docker.com/linux/ubuntu bionic InRelease [64.4 kB]
+            Hit:2 http://archive.ubuntu.com/ubuntu bionic InRelease                          
+            Get:3 https://download.docker.com/linux/ubuntu bionic/stable amd64 Packages [6,046 B]
+            Get:4 http://archive.ubuntu.com/ubuntu bionic-updates InRelease [88.7 kB]           
+            Get:5 http://archive.ubuntu.com/ubuntu bionic-backports InRelease [74.6 kB]
+            Get:6 http://archive.ubuntu.com/ubuntu bionic-security InRelease [88.7 kB]
+            Fetched 322 kB in 2s (169 kB/s)    
+            Reading package lists... Done
+
+    
+    7.Update the apt package index.
+    
+        $ sudo apt-get update
+
+    
+    8.Install Docker
+    
+    
+        (1).Install the latest version of Docker CE and containerd
+        
+            $ sudo apt-get install docker-ce docker-ce-cli containerd.io
+        
+                Reading package lists... Done
+                Building dependency tree       
+                Reading state information... Done
+                The following additional packages will be installed:
+                aufs-tools cgroupfs-mount libltdl7 pigz
+                The following NEW packages will be installed:
+                aufs-tools cgroupfs-mount containerd.io docker-ce docker-ce-cli libltdl7 pigz
+                0 upgraded, 7 newly installed, 0 to remove and 3 not upgraded.
+                Need to get 50.7 MB of archives.
+                After this operation, 243 MB of additional disk space will be used.
+                Do you want to continue? [Y/n] y
+                ...
+
+        
+        (2).Install a specific version of Docker CE
+        
+            $ apt-cache madison docker-ce
+            
+             docker-ce | 5:18.09.5~3-0~ubuntu-bionic | https://download.docker.com/linux/ubuntu bionic/stable amd64 Packages
+             docker-ce | 5:18.09.4~3-0~ubuntu-bionic | https://download.docker.com/linux/ubuntu bionic/stable amd64 Packages
+             docker-ce | 5:18.09.3~3-0~ubuntu-bionic | https://download.docker.com/linux/ubuntu bionic/stable amd64 Packages
+             ...
+             
+            $ sudo apt-get install docker-ce=<VERSION_STRING> docker-ce-cli=<VERSION_STRING> containerd.io
+            
+            A example of <VERSION_STRING> is '5:18.09.1~3-0~ubuntu-xenial';
+            
+    
+    9.Verify that Docker CE is installed correctly
+    
+        We can running 'hello-world' image to verify Docker is installed properly.
+
+        $ sudo docker run hello-world
+        
+        
+            Unable to find image 'hello-world:latest' locally
+            latest: Pulling from library/hello-world
+            1b930d010525: Pull complete 
+            Digest: sha256:92695bc579f31df7a63da6922075d0666e565ceccad16b59c3374d2cf4e8e50e
+            Status: Downloaded newer image for hello-world:latest
+            
+            Hello from Docker!
+            This message shows that your installation appears to be working correctly.
+            
+            To generate this message, Docker took the following steps:
+            1. The Docker client contacted the Docker daemon.
+            2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+                (amd64)
+            3. The Docker daemon created a new container from that image which runs the
+                executable that produces the output you are currently reading.
+            4. The Docker daemon streamed that output to the Docker client, which sent it
+                to your terminal.
+            
+            To try something more ambitious, you can run an Ubuntu container with:
+            $ docker run -it ubuntu bash
+            
+            Share images, automate workflows, and more with a free Docker ID:
+            https://hub.docker.com/
+            
+            For more examples and ideas, visit:
+            https://docs.docker.com/get-started/
+
+
+        (1).Check running Dcoekr containers:
+        
+            $ sudo docker ps 
+            
+                CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+                
+                
+        (2).Check stopped Docker containers:        
+
+            $ sudo docker ps -a
+            
+                CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS                          PORTS               NAMES
+                6d2f48f89250        hello-world         "/hello"            About a minute ago   Exited (0) About a minute ago                       amazing_colden
+                
+
+        (3).Check Docker images
+        
+            $ sudo docker images
+
+                REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+                hello-world         latest              fce289e99eb9        4 months ago        1.84kB
+                
+     
+    10.Add current account to 'docker' group
+    
+        This step allows current account run 'docker' directly no need to use 'sudo'.
+
+        
+        (1).Add current account to 'docker' group
+        
+            $ sudo usermod -a -G docker $USER
+            
+        (2).Check current account is in 'docker' group
+
+            $ cat /etc/group | grep $USER
+            
+        (3).Logout and login again to make the group change effective.
+        
+            
+        (4).Verify Docker is running correctly.
+        
+            $ docker run hello-world
+            
+        If you have seen the message as the same as step 9, you are success.
+
+    
+    We finished all of steps.
