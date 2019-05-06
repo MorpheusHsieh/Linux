@@ -1,0 +1,75 @@
+Using jq to query the content of a JSON object
+
+    jq is a lightweight and flexible command-line JSON processor.
+
+    jq is like sed for JSON data - 
+    
+    you can use it to slice and filter and map and transform structured data 
+    with the same ease that sed, awk, grep and friends let you play with text.
+    
+    
+    1.The example of JSON object as follows:
+    
+        {
+        "masters": [
+            {
+            "id": "k8s-master1",
+            "IP": "10.10.1.81"
+            }, {
+            "id": "k8s-master1",
+            "IP": "10.10.1.82"
+            }
+        ],
+        "nodes": [
+            {
+            "id": "k8s-node1",
+            "IP": "10.10.1.83"
+            }, {
+            "id": "k8s-node2",
+            "IP": "10.10.1.84"
+            }
+        ],
+        "proxy": [
+            {
+            "id": "k8s-proxy",
+            "IP": "10.10.1.85"
+            }
+        ]
+        }
+
+
+    2.Find all key-values in 'masters' array:
+    
+        $ arr=( $(jq -r '.masters[]' k8s-config.json) )
+        $ printf '%s\n' "${arr[@]}"
+    
+        
+    3.Find all values of key 'id' in 'masters' array:
+    
+        $ arr=( $(jq -r '.masters[].id' k8s-config.json) )
+        $ printf '%s\n' "${arr[@]}"
+    
+        
+    4.Find all values of key 'IP' in 'masters' array:
+    
+        $ arr=( $(jq -r '.masters[].IP' k8s-config.json) )
+        $ printf '%s\n' "${arr[@]}"
+    
+        
+    5.Find the value of key 'IP' 
+      when the value of key 'id' is equal to 'k8s-master1'
+        
+        $ arr=( $(jq -r '.masters[] | select(.id=="k8s-master1") | .ip' k8s-config.json) )
+        $ printf '%s\n' "${arr[@]}"
+        
+
+    6.Find value from environment variables
+    
+        We assign a json object as the value of a environment variable in advance.
+        Then, we can use jq to query the content of the environment variable.
+    
+            $ HOSTID=k8s-master1
+            $ arr=( $(jq -r --arg HOSTID "${HOSTID}" '.masters[] | select(.id==$HOSTID) | .ip' k8s-config.json) )
+            $ printf '%s\n' "${arr[@]}"
+	
+    
