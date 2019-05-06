@@ -1,0 +1,184 @@
+Install Docker MQTT Broker_User Configuration
+
+
+    Docker is one of the most widely used container application.
+    
+    We have introduced to run a simplest MQTT Broker Docker container in other article.
+
+    Sometimes, we may wish to configure MQTT architecture according to own idea.
+    At this moment, we need to use a custom configuration of Docker MQTT Broker.
+
+    In this article, we will introduce the custom configuration file.    
+    
+    
+    1.Create host machine configuration file
+    
+      To use a custom configuration file, 
+      mount a local configuration file to the container's configuration file, 
+      i.e. 'mosquitto/config/mosquitto.conf', is necessary.
+      
+      Our local configration file also named 'mosquitto.conf' 
+      and the configuration directory struct as follows:
+      
+        - mosquitto
+            - config
+                - mosquitto.conf
+            - data
+            - log
+
+      We will make this struct and configuration file in account home directory, 
+      the command as follows:
+      
+        $ mkdir -p ~/mosquitto/config
+        $ mkdir -p ~/mosquitto/data
+        $ mkdir -p ~/mosquitto/log
+        $ nano ~/mosquitto/config/mosquitto.conf
+        
+      Add following content to 'mosquitto.conf' file:
+
+        persistence true
+        persistence_location /mosquitto/data/
+        log_dest file /mosquitto/log/mosquitto.log
+        
+        
+    2.Run Docker MQTT Broker
+    
+        The features of container is as follows:
+                   
+            
+            A. Keep STDIN open even if not attached.
+            
+            B. Allocate a pseudo-TTY
+            
+            C. Run container in background and print container ID
+            
+            D. Publish a container’s port 1883 to the host port 1883 for TCP connection.
+            
+            E. Publish a container’s port 9001 to the host port 9001 for WebSocket connection.
+            
+            F. Bind mount a user configuration '~/mosquitto/config/mosquitto.cong'
+            
+            G. Assign a name to the container
+            
+        
+        The command is as follows:
+            
+        
+            $ docker run -itd \
+            -p 1883:1883 \
+            -p 9001:9001 \
+            -v ~/mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf \
+            --name mqtt \
+            eclipse-mosquitto
+
+     
+    3.Verify Docker MQTT Service
+    
+    
+        (1).Check container is running.
+        
+            List running container
+
+                $ docker ps
+        
+            The message should look like as follows:
+        
+                CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                            NAMES
+                971303200da4        eclipse-mosquitto   "/docker-entrypoint.…"   6 minutes ago       Up 6 minutes        0.0.0.0:1883->1883/tcp, 0.0.0.0:9001->9001/tcp   mqtt
+        
+            
+            If not, something are wrong, you need to find and fix it.
+
+        
+        (2).Enter docker container
+        
+            After Docker MQTT Broker is running, 
+            you can enter the container to check user configuration file.
+            
+            Enter container:
+            
+                $ docker exec -it mqtt sh
+                / # 
+                
+            The prompt change as  "\ #" means you have entered the container.
+                
+            If you want to display the content of 'mosquitto.conf', as follows:
+            
+                / # cat '/mosquitto/config/mosquitto.conf'
+                
+
+            If you want to exit docker container, typing 'exit' command.
+            
+                / # exit
+                $
+        
+
+    4.Verify MQTT service
+    
+    
+        (1).Enter container:
+        
+            $ docker exec -it mqtt sh
+            / # 
+            
+            
+        (2).Subscribe topic on MQTT Broker container:
+
+            / # mosquitto_sub -t '#'
+            
+        
+            Publish message from host machine:
+        
+                A.Open Chrome browser on host machine.
+                
+                B.Install Chrome application 'MQTTLens'.
+                
+                    It connects to a MQTT broker and is able to subscribe and publish to MQTT topics.
+            
+                C.Input parameters:
+                
+                    The parameters that need to be input are "Connection name" and "Hostname", 
+                    then press 'save' button.
+    
+                D.Publish message.
+                
+                    Enter any topic and message, and press 'PUBLISH' button.
+                    
+                    Then you can find the message at step (2) terminal window.
+                
+                
+        (3).Publish message from MQTT container:
+        
+            A.Subscribe topic on host machine 'MQTTLens' application.
+            
+                '#' means all topics. You only need to subscribe topic '#'.
+            
+            B.Enter MQTT container:
+            
+                $ docker exec -it mqtt sh
+                / # 
+            
+            C.Publish message form MQTT container.
+            
+                Usgae: mosquitto_pub {[-t topic] [-m message]}
+                
+                For example:
+                
+                    / # mosquitto_pub -t test -m 'From MQTT container'
+        
+            D.Verify message from 'MQTTLens' application.
+            
+        
+    5.List all running and stopped container
+    
+        $ docker ps -a
+
+
+    6.List images
+    
+        $ docker images
+        
+        
+    
+    
+
