@@ -1,0 +1,121 @@
+Install Docker MQTT Broker_Volume to pesist data
+
+
+    Message Queuing Telemetry Transport (MQTT) is one of the most commonly used
+    protocols in IoT projects. 
+    
+    In addition, it is designed as a lightweight messaging protocol that uses 
+    publish/subscribe operations to exchange data between clients and the server.
+
+    Docker is one of the most widely used container application.
+
+    Docker enables us to seperate services from the infrastructure let softwares 
+    can deploy more quickly.
+
+    In order to be able to save (persist) data or to share data between containers.
+
+    Docker came up with the concept of volume to let us map the folder of Docker 
+    container to the host machine folder.
+
+    This mechanism help our to back up or synchonize the data more quickly and easy.
+
+    Therefore, we will be introducing to create a Docker MQTT broker and to store 
+    data into Docker volume.
+    
+    The steps is as follows:
+
+    
+    1.Create Docker volume
+    
+        $ docker volume create --name mqtt_data
+        
+            mqtt_data
+
+
+    2.Run Docker container
+    
+        $ docker run -itd \
+        --name mqtt_vol \
+        -p 1883:1883 \
+        -p 9001:9001 \
+        -v mqtt_data:/mqtt/data \
+        eclipse-mosquitto
+
+            e8418d220dd9f39bac099a471c0c106e10c9035d8d2159ffa79c6792f24e8262
+    
+    
+    3.Check Docker container is running
+    
+        $ docker ps 
+        
+            CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                                            NAMES
+            e8418d220dd9        eclipse-mosquitto   "/docker-entrypoint.…"   About a minute ago   Up About a minute   0.0.0.0:1883->1883/tcp, 0.0.0.0:9001->9001/tcp   mqtt_vol
+            
+            
+    4.Inspect Docker volume location
+    
+        $ docker inspect -f '{{.Mounts}}' e8418d220dd9
+        
+        [
+         {volume mqtt_data /var/lib/docker/volumes/mqtt_data/_data /mqtt/data local z true } 
+         {volume 42dcc9569683a79c7fea1089a924fd4fe2b10e2c3b02ba9a73a217dfaad013d8 /var/lib/docker/volumes/42dcc9569683a79c7fea1089a924fd4fe2b10e2c3b02ba9a73a217dfaad013d8/_data /mosquitto/data local  true } 
+         {volume ec18d0b602a15953e38595f58e123039f20348ee2f9fbc1795e1810c0bbcdc3c /var/lib/docker/volumes/ec18d0b602a15953e38595f58e123039f20348ee2f9fbc1795e1810c0bbcdc3c/_data /mosquitto/log local  true }
+        ]
+      
+      
+    5.Check Docker volume is working properly
+    
+        (1).Change as root account
+        
+            $ sudo -i
+            root@xxxx:~#
+            
+            
+        (2).Change location to volume mqtt_data directory 
+        
+            root@xxxx:~# cd /var/lib/docker/volumes/mqtt_data/_data
+            root@xxxx:/var/lib/docker/volumes/mqtt_data/_data#
+            
+            
+        (3).Open a new terminal window and login container
+        
+            $ docker exec -it mqtt_vol ash
+            \ # 
+        
+        (4).Go to '/mqtt/data/' directory of container and create a new empty file
+
+            \ # cd /mqtt/data
+            \ # touch test.txt
+            \ # ls -al
+            
+                total 8
+                drwxr-xr-x    2 root     root          4096 May  7 14:38 .
+                drwxr-xr-x    3 root     root          4096 May  7 14:21 ..
+                -rw-r--r--    1 root     root             0 May  7 14:38 test.txt
+
+
+        (5).Check file is exist or not.
+        
+            A. Back to first terminal window.
+
+            B. Check 'testt.txt' file is exist or not.
+            
+                root@xxxx:/var/lib/docker/volumes/mqtt_data/_data# ls -al
+                
+                total 8
+                drwxr-xr-x 2 root root 4096 May  7 14:38 .
+                drwxr-xr-x 3 root root 4096 May  7 14:19 ..
+                -rw-r--r-- 1 root root    0 May  7 14:38 test.txt
+
+
+            Now we can confirm that Docker volume is working properly.
+
+
+        (6).Exit the root account
+        
+            root@xxxx:/var/lib/docker/volumes/mqtt_data/_data# exit
+            logout
+            $ 
+            
+
+    Now, we finished the setup and examination of the Docker volume.

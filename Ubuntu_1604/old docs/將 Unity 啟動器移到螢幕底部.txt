@@ -1,3 +1,0 @@
-將 Unity 啟動器移到螢幕底部
-
-$ gsettings set com.canonical.Unity.Launcher launcher-position Bottom
