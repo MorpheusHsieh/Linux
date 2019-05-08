@@ -1,0 +1,79 @@
+Change hostname
+
+
+    Sometimes, we would like change the hostname of Ubuntu system to manager 
+    these remote servers more convenience.
+    
+    In Ubuntu 18.04 LTS system, we can use the 'hostnamectl' command to see or 
+    set system's host name. 
+
+    The host name of Ubuntu 18.04 LTS is usually at '/etc/hostname' file.
+    
+    We also need to check '/etc/hosts' file, because maybe some hostname and IP 
+    address pair have defined in it.
+
+    Open the terminal window and type the following commands to set or change 
+    host name on Ubuntu 18.04 LTS.
+    
+    
+    1.Display the current Ubuntu hostname
+    
+        The origin hostname is 'localhost'.
+
+        Using 'hostnamectl status' command to show current hostname settings.
+    
+        $ hostnamectl status
+        
+           Static hostname: localhost
+                 Icon name: computer-vm
+                   Chassis: vm
+                Machine ID: b112c3a5642842cd88fbfeed59b352b3
+                   Boot ID: e81ded5dcd0b4e298ccd087ddd7ebf42
+            Virtualization: oracle
+          Operating System: Ubuntu 18.04.2 LTS
+                    Kernel: Linux 4.15.0-48-generic
+              Architecture: x86-64
+    
+    
+    2.Set system hostname
+    
+        Usage: hostnamectl set-hostname NAME
+        
+        We use a new hostname 'u1804' as an example.
+
+        Type following commands:
+        
+            $ sudo hostnamectl set-hostname u1804
+      
+      
+    3.Verify new changes:
+    
+        $ hostnamectl
+    
+           Static hostname: u1804
+                 Icon name: computer-vm
+                   Chassis: vm
+                Machine ID: b112c3a5642842cd88fbfeed59b352b3
+                   Boot ID: e81ded5dcd0b4e298ccd087ddd7ebf42
+            Virtualization: oracle
+          Operating System: Ubuntu 18.04.2 LTS
+                    Kernel: Linux 4.15.0-48-generic
+              Architecture: x86-64
+
+    
+    4.Check '/etc/hosts' file
+        
+        If you have added IP address and hostname 'localhost' pair in '/etc/hosts'.
+        
+        You need to edit '/etc/hosts' file.
+                
+        $ sudo nano /etc/hosts
+        
+        Replace all of old hostname with the new one.
+        
+            
+    5.Logout the system to changes take effect
+    
+        $ logout
+        
+        Now, the new hostname has already displayed on login prompt.
