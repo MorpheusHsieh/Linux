@@ -1,0 +1,45 @@
+Set JSON file as the value of an environment variable
+
+
+    1.Create a JSON file
+    
+        The example of JSON filename is 'config.json', 
+        and the content is as follow:
+        
+        {
+            "masters": [
+                {
+                "id": "k8s-master1",
+                "ip": "10.10.1.81"
+                }, {
+                "id": "k8s-master1",
+                "ip": "10.10.1.82"
+                }
+            ],
+            "nodes": [
+                {
+                "id": "k8s-node1",
+                "ip": "10.10.1.83"
+                }, {
+                "id": "k8s-node2",
+                "ip": "10.10.1.84"
+                }
+            ],
+            "proxy": [
+                {
+                "id": "k8s-proxy",
+                "ip": "10.10.1.85"
+                }
+            ]
+        }  
+        
+        
+    2.The content of JSON file assigns to an environment variable 'config'.
+    
+     	$ config=$(cat config.json)
+        
+        
+    3.Check the content of variable 'config'
+
+        $ echo $config
+        
