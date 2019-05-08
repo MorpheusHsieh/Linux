@@ -1,0 +1,6 @@
+Move the unity desktop's launcher to the bottom of screen
+
+
+    $ gsettings set com.canonical.Unity.Launcher launcher-position Bottom
+
+
