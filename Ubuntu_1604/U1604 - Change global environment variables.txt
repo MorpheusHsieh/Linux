@@ -1,0 +1,34 @@
+Change global environment variables
+
+
+    Sometimes, we may need to add or modify the value of PATH variable for all 
+    users.
+
+    The modification of '/etc/environment' can let us achieve this goal.
+
+
+    1.Edit '/etc/environment' file
+    
+        $ sudo nano /etc/environment
+       
+       
+    2.Change environment settings
+    
+        We add a 'JAVA_HOME' variable as a example.
+        
+        The modified content is as follows:
+        
+            ...
+            JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64"
+            ...
+        
+    3.Reboot and reload settings
+    
+        After reboot and login again, you can type command:
+        
+            $ echo $JAVA_HOME
+        
+        It should show the value as follows:
+        
+            /usr/lib/jvm/java-8-openjdk-amd64
+            
