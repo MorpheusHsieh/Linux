@@ -1,0 +1,97 @@
+Enable SSH service on Ubuntu 18.04 LTS
+
+
+    Secure Shell (SSH) is a cryptographic network protocol used for secure 
+    connection between a client and a server.
+
+    If we want to use SSH protocol to connect a remote system, a SSH server 
+    package is need to install on the remote system previously, and using a 
+    local SSH client to connect the remote system.
+
+    The operation system of a local (client) and a remote (server) machine can 
+    be the same or different types, e.g. we can connect to a remote linux 
+    system from a windows system or a another linux system through SSH protocol.
+
+    For convenience of manage multiple remote system, administrator often use 
+    SSH client to connect mutiple remote system to controlled or configured them 
+    simutaneously.
+
+    In Ubuntu system, the SSH server is called OpenSSH server. 
+    The OpenSSH server program is available in the official package repository 
+    of Ubuntu 18.04 LTS.
+
+    In this article, We will explain how to enable SSH server on Ubuntu 18.04 LTS.
+    
+    
+    1.Update Ubuntu to the latest status
+    
+        $ sudo apt-get update
+        $ sudo apt-get upgrade
+        
+        
+    2.Install OpenSSH server package
+
+        $ sudo apt-get install openssh-server
+        
+        
+    3.Show status of SSH server
+    
+        $ sudo service ssh status	
+        
+        Now, the message should look like as follows:
+        
+        
+        ● ssh.service - OpenBSD Secure Shell server
+           Loaded: loaded (/lib/systemd/system/ssh.service; enabled; vendor preset: enabled)
+           Active: active (running) since Thu 2019-05-09 13:33:35 UTC; 59min ago
+          Process: 831 ExecStartPre=/usr/sbin/sshd -t (code=exited, status=0/SUCCESS)
+         Main PID: 871 (sshd)
+            Tasks: 1 (limit: 2320)
+           CGroup: /system.slice/ssh.service
+                   └─871 /usr/sbin/sshd -D
+
+        
+        If the status of SSH server is not 'active (running)', something is wrong!!! 
+        
+    
+    4.Change settings
+    
+        Sometimes, you maybe need to change some settings,
+        e.g., the listening port, or root login permission ... etc.
+
+        You can edit '/etc/ssh/sshd_config' file.
+        
+        
+            $ sudo nano /etc/ssh/sshd_config
+            
+            (do something ...)
+            Save and quit.
+            
+            
+    5.Stop/Start/restart SSH service
+    
+        Stop SSH servive
+    
+            $ sudo service ssh stop
+            
+        Start SSH servive
+
+            $ sudo service ssh start
+            
+            
+    6.Apply the changes by restarting or reloading SSH:
+
+            $ sudo service ssh restart
+
+
+    7.Enable/Disable SSH service
+    
+        In order to completely disable SSH service after reboot system.
+        
+            $ sudo systemctl disable ssh
+            
+            
+        To enable SSH service again.
+        
+            $ sudo systemctl enable ssh
+    
