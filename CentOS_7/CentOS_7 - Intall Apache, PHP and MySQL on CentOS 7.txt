@@ -1,0 +1,101 @@
+Intall Apache, PHP and MySQL on CentOS 7 (LAMP)
+
+
+1. Apache
+
+	(1). Install Apache
+
+		a. clean-up yum:
+
+			$ sudo yum clean all
+
+		b. As a matter of best practice we’ll update our packages:
+
+			$ sudo yum -y update
+
+		c. Installing Apache is as simple as running just one command:
+	
+			$ sudo yum -y install httpd
+
+			
+	(2) Allow Apache through the firewall
+	
+		Allow the default HTTP and HTTPS port, ports 80 and 443, through firewalld:
+
+			$ sudo firewall-cmd --permanent --zone=public --add-port=80/tcp
+
+			$ sudo firewall-cmd --permanent --zone=public --add-port=443/tcp
+
+		And reload the firewall:
+
+			$ sudo firewall-cmd --reload
+
+			
+	(3) Configure Apache to start on boot
+	
+		And then start Apache:
+
+			$ sudo systemctl start httpd
+
+		Be sure that Apache starts at boot:
+
+			$ sudo systemctl enable httpd
+
+		To check the status of Apache:
+
+			$ sudo systemctl status httpd
+
+		To stop Apache:
+
+			$ sudo systemctl stop httpd
+
+			
+	(4) Now, the error message will be displaying as follows:
+    
+		AH00558: httpd: Could not reliably determine the server's fully qualified 
+		domain name, using localhost.localdomain. Set the 'ServerName' directive 
+		globally to suppress this message.
+	
+
+		For solve this error, we need to change two file and restart the httpd service.
+        
+
+		(1).Change '/etc/httpd/conf/httpd.conf' file:
+        
+            A.Edit '/etc/httpd/conf/httpd.conf' file
+            
+                $ sudo nano /etc/httpd/conf/httpd.conf
+                
+            B.Remark 'ServerName' row
+            
+                The modified content is as follows:
+            
+                    #.....
+                    ServerName www.yourwebserver.com:80
+                    #.....
+            
+            C.Save and Quit file.
+            
+            
+        (2).Change '/etc/hosts' file:
+        
+            A.Edit '/etc/hosts' file
+            
+                $ sudo nano /etc/hosts
+                
+            B.Add IP address and ServerName data pair
+            
+                We use IP (x.x.x.x) and ServerName (www.yourwebserver.com) as a example.
+            
+                The modified content is as follows:
+
+                    127.0.0.1		yourwebserver
+                    x.x.x.x			www.yourwebserver.com
+                
+            C.Save and Quit file.    
+            
+            
+        (3).Restart httpd:
+
+			$ systemctl restart httpd.service
+			
