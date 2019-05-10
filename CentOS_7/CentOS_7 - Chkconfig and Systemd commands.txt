@@ -1,0 +1,128 @@
+Chkconfig and Systemd commands
+
+    
+    Prior to CentOS 7, the 'init' daemon is responsible for service management.
+    
+    The 'chkconfig' and 'service' command were used to manager which one service
+    should be executed at which one run-level.
+
+    The status of service, e.g., on or off, will be controlled according to the 
+    shell script name that configured in '/etc/init.d' file.
+
+    In CentOS 7, the 'init' daemon was replaced by 'systemd' daemon, the 
+    'run-level' was replaced by 'target'.
+    
+    For example, we want to start a service and to enable it automatically after 
+    the machine rebooted.
+
+
+        # sudo service httpd start
+        # sudo chkconfig httpd on
+        
+    You would like to display the information of all run-level system service 
+    status.
+        
+        # sudo chkconfig --list
+        
+	
+    The 'chkconfig' command is still also useable in CentOS 7, but it is also 
+    necessary that to become familiar with the 'systemd' command. 
+
+    We will list some examples to illustrate the instructions different between
+    'chkconfig' and 'systemd' at the same management behavior.
+
+
+    1.List all of services
+    
+        chkconfig:
+    
+            # chkconfig --list
+    
+        systemd:
+    
+            # systemctl list-units
+    
+        
+    2.Enable a service after booted
+    
+        chkconfig:
+    
+            # chkconfig <servicename> on
+    
+        systemd:
+    
+            # systemctl enable <servicename>.service
+    
+    
+    
+    3.Disable a service
+    
+        chkconfig:
+    
+            # chkconfig <servicename> off
+    
+        systemd:
+    
+            # systemctl disable <servicename>.service
+    
+    
+    4.Start a service
+    
+        chkconfig:
+    
+            # service <servicename> start
+    
+        systemd:
+    
+            # systemctl start <servicename>.service
+    
+    
+    
+    5.Stop a service
+    
+        chkconfig:
+    
+            # service <servicename> stop
+    
+        systemd:
+    
+            # systemctl stop <servicename>.service
+            
+    
+    6.Check the status of a service
+    
+        chkconfig:
+    
+            # service <servicename> status
+    
+        systemd:
+    
+            # systemctl status <servicename>.service
+    
+    
+            
+    7.List all of useable run-level stage
+    
+        # systemctl list-units --type target
+    
+    
+    
+    8.Display current system default run-level stage
+    
+        # systemctl get-default
+    
+        The 'multi-user.target' is equals to prior 'runlevel 3'.
+        
+        The 'graphical.target'  is as the same as 'runlevel 5'.        
+    
+    
+        
+    9.Change run-level to text mode (runlevel 3)
+    
+        # systemctl isolate multi-user.target
+    
+        
+    
+    10.Set default mode as text mode (runlevel 3) after booted.
+    
+        # systemctl set-default multi-user.target
