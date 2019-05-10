@@ -1,0 +1,52 @@
+Yum ThirdParty Repositories for CentOS 7
+
+
+    1.EPEL
+    
+        EPEL (Extra Packages for Enterprise Linux) is a free and open source, 
+        popular, community based repository project aimed at providing high 
+        quality packages that have been developed, tested, and improved in 
+        Fedora and made available for RHEL, CentOS, Scientific Linux and similar
+        Linux distributions. 
+        
+        Most of the other repositories listed in this article are dependent on EPEL.
+        
+        The command is as follows:
+    
+            # yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+        
+        or 
+        
+            # yum install epel-release
+        
+    
+    2. RPMFusion
+
+        RPMFusion is a third-party repository that offers some free and non-free 
+        add-on software for Fedora and Enterprise Linux distros inclusing RHEL 
+        and CentOS. 
+        
+        You need to enable EPEL repo before you enable RPM Fusion.
+    
+            # yum install https://download1.rpmfusion.org/nonfree/el/rpmfusion-nonfree-release-7.noarch.rpm
+    
+        
+    3. ELRepo
+
+        ELRepo (Community Enterprise Linux Repository) is an RPM repository 
+        intended to provide hardware related packages such as filesystem 
+        drivers, graphics drivers, network drivers, sound drivers, webcam and 
+        video drivers, to improve your experience with Enterprise Linux.
+
+        To enable ELRepo on your system, use the following commands.
+    
+        a.Star Get started
+    
+            Import the public key:
+    
+            # rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org (external link)
+    
+        b.To install ELRepo for RHEL-7, SL-7 or CentOS-7:
+    
+            # rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm (external link)
+
