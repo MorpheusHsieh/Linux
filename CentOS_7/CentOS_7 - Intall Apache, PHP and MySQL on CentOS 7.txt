@@ -50,12 +50,20 @@ Intall Apache, PHP and MySQL on CentOS 7 (LAMP)
 			$ sudo systemctl stop httpd
 
 			
-	(4) Now, the error message will be displaying as follows:
+	(4) If the error message appears when apache service restart.
     
-		AH00558: httpd: Could not reliably determine the server's fully qualified 
-		domain name, using localhost.localdomain. Set the 'ServerName' directive 
-		globally to suppress this message.
-	
+        The error message is as follows:
+    
+            $ apachectl -k restart
+            passing arguments to httpd using apachectl is no longer supported.
+            ...
+            ...
+            /etc/sysconfig/httpd config file.
+            AH00558: httpd: Could not reliably determine the server's fully qualified 
+            domain name, using localhost.localdomain. Set the 'ServerName' directive 
+            globally to suppress this message.
+            ...
+            $
 
 		For solve this error, we need to change two file and restart the httpd service.
         
