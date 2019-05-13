@@ -1,0 +1,16 @@
+Install Latest Java on CentOS 7
+
+
+    1. Search Java JDK version
+    
+        # yum search java
+    
+        
+    2. Find the latest version Java JDK
+    
+        ex: The latest version is java-1.8.0-openjdk, then 
+        
+        # yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-devel
+	
+	
+

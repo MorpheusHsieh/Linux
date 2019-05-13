@@ -1,0 +1,37 @@
+Install MariaDB on CentOS 7
+
+
+
+	1.Yum install MariaDB
+    
+		$ yum install mariadb-server mariadb
+
+		
+	2.Start MariaDB service
+
+		$ systemctl start mariadb
+
+
+    3.Enable MariaDB service automatically
+    
+		$ systemctl enable mariadb
+
+		
+	3.Set password of root account of MariaDB
+    
+        The default password of root account is empty string, you should change 
+        the password as soon as possible.
+    
+            $ /usr/bin/mysql_secure_installation
+		
+        During the setting process, the old password must has been inputed 
+        correctly before the new password is inputed.
+        
+        There are some options need to select, I usually use default option.
+
+		
+	4.Test MariaDB service 
+    
+        Using root account to login MariaDB to test if work properly.
+
+		$ mysql -u root -p

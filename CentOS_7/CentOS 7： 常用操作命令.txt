@@ -58,8 +58,8 @@ CentOS 的常用操作命令
     # cut -d: -f1 /etc/passwd # 查看系統所有用戶
     # cut -d: -f1 /etc/group # 查看系統所有組
     # crontab -l # 查看當前用戶的計劃任務
-　 # useradd centospub # 建立用戶名為 centospub 的一般用戶
-　 # passwd centospub # 為用戶 centospub 設置密碼
+ 　 # useradd centospub # 建立用戶名為 centospub 的一般用戶
+　  # passwd centospub # 為用戶 centospub 設置密碼
     # userdel -r centospub # 刪除用戶名為 centospub 的一般用戶
 
 【服務】
