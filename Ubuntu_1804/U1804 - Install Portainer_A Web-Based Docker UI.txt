@@ -1,0 +1,162 @@
+Install Portainer on Ubuntu 18.04 LTS - A Web-Based Docker UI 
+
+
+    Portainer is a web-based application for Docker containers management.
+
+    It provides a graphical interface helps us to manage our Docker containers 
+    at a more convenience way.
+    
+    Portainer is a lightweight Docker container that runs on the Docker host. 
+    
+    Therefore, you can very easy to install it after the Docker host installed.
+    
+    In this article, I will show you how to install Portainer on the Docker host.
+    
+    I will be using Lubuntu 18.04 LTS with Docker CE installed as a example.
+    
+    So, let’s get started.
+
+
+    0.Update system and Upgrade packages
+    
+        Before installing any packages, 
+        please update the system repository and upgrade packages.
+        
+        $ sudo apt-get update
+        $ sudo apt-get upgrade
+     
+    
+    1.Create volume to store portainer data
+    
+        We use 'portainer_data' as the volume name.
+    
+        $ docker volume create portainer_data
+        
+        
+    2.Installl portainer 
+    
+        $ docker run -d \
+        -p 9000:9000 \
+        --name portainer \
+        -v /var/run/docker.sock:/var/run/docker.sock \
+        -v portainer_data:/data \
+        portainer/portainer
+
+        
+        If you install Portainer for the first time, 
+        the following message should display on the screen:
+
+            Unable to find image 'portainer/portainer:latest' locally
+            latest: Pulling from portainer/portainer
+            d1e017099d17: Pull complete 
+            0b1e707a06d2: Pull complete 
+            Digest: sha256:d6cc2c20c0af38d8d557ab994c419c799a10fe825e4aa57fea2e2e507a13747d
+            Status: Downloaded newer image for portainer/portainer:latest
+            9fc9440eecd152aacaad0a917b32b8b269a25dced40c0eee7b3e26f5fb78ef08
+        
+
+    3.Check if Portainer is working
+    
+        (1).Check running Docker containers
+    
+            $ docker ps
+        
+            The message should like below:
+        
+                CONTAINER ID        IMAGE                 COMMAND             CREATED             
+                STATUS              PORTS                    NAMES
+                9fc9440eecd1        portainer/portainer   "/portainer"        12 minutes ago      
+                Up 5 seconds        0.0.0.0:9000->9000/tcp   portainer
+            
+            If not, start potainer container as follows.
+            
+            
+        (2).Check stopped portainer container
+        
+            List all of stopped containers.
+        
+                $ docker ps -a
+            
+            The message is as follows:
+            
+                CONTAINER ID        IMAGE                 COMMAND                  CREATED             
+                STATUS                     PORTS                                            NAMES
+                9fc9440eecd1        portainer/portainer   "/portainer"             11 minutes ago      
+                Exited (1) 6 minutes ago                                                    portainer
+                ...
+
+        (3).Start Portainer container
+        
+            Type following command:
+            
+                $ docker start portainer
+                
+            Check running containers again.
+            
+                $ docker ps
+
+
+    4.Open Portainer on Web browser
+
+        (1).Open a browser and type IP address and port on address bar
+        
+            Here, we use host Ip address '192.168.100.12' as a example.
+            
+                http://192.168.100.12:9000/
+                
+                    
+        (2).Login for the first time
+
+            If you are the first time to login Portainer, 
+            you will be asked to enter username and password.
+
+            Here, we use username 'admin' and password '12345678' as a example.
+
+                username: admin
+                password: 12345678
+
+            At first login, you will need to input password twices.
+        
+            Then, press 'Create user' button.
+            
+        
+        (3).Select a connect type you want to manage.
+        
+            I suggest select 'Local' and press 'connect' button' to connect with 
+            youe Docker container.
+        
+        
+        (4).Portainer Admin Dashboard
+        
+            If you are not see the Portainer Admin Dashboard.
+            
+            Please do the following steps.
+            
+            
+                A.Click 'Home' items
+            
+                    Use mouse left button to click 'Home' item on the left menu frame.
+            
+                B.Click local 'up' button
+            
+                    The 'up' button are on the top row of local group inside.
+                
+                    It's a green button. Find and just click it.
+
+                
+            Then, Portainer Admin Dashboard should display.
+    
+    
+    5.Deploy New App Container
+    
+        (1).Press 'App Templates' menu on the left frame.
+        
+        
+        (2).Choose the application that you want to install.
+        
+        
+        (3).Click 'Deploy the container' button.
+        
+        
+        (4).Check installed Docker Container.
+        
