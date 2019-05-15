@@ -1,0 +1,24 @@
+Query kernel or service version on CentOS
+
+
+    1.Query Linux Kernel version
+        
+        # uname -r
+    
+    
+    2.Query Linux distribution and version
+    
+        # cat /etc/redhat-release
+    
+    
+    3.Query PHP version
+    
+        # php -v
+    
+    4.Query MySQL version
+        
+        # mysql -V
+    
+    5.Query Apache version
+        
+        # rpm -qa httpd
