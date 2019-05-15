@@ -1,0 +1,33 @@
+Apache Congiguration for PHP
+
+
+	1.Edit 'httpd.conf' file
+
+		# vi /usr/local/apache2/conf/httpd.conf
+
+    
+    2.Add PHP MIME type for PHP files to be parsed.
+    
+        (1).Find 'AddType application/x-gzip .tgz' string
+        
+        (2).Add the follows string below the string found in step (1).
+            
+            AddType application/x-httpd-php .php
+            AddType application/x-httpd-php-source .phps
+        
+
+    3.Add 'index.php' as an index file.
+    
+        Apache needs to be configured to recognize index.php as an index file.
+        
+        (1).Find 'DirectoryIndex index.html' string.
+        
+        (2).Change as follows:
+        
+            DirectoryIndex index.php index.html
+
+            
+    4.Restart Apache service        
+
+        # /etc/init.d/httpd restart
+
