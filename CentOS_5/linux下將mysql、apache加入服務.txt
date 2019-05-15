@@ -1,5 +1,6 @@
 linux下將mysql、apache加入服務
 
+
 一、 MySql加入到系統服務裡面
 
 　　cp /usr/local/mysql/share/mysql/mysql.server /etc/init.d/mysql
