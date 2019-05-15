@@ -1,0 +1,3 @@
+Install wget package
+
+    # yum -y install wget

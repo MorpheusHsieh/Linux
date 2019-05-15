@@ -1,4 +1,4 @@
-How to install php on CentOS 7
+Install php on CentOS 7
 
 
 	PHP is the component of our setup that will process code to display dynamic content. 

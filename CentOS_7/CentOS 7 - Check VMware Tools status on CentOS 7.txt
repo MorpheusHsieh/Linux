@@ -1,0 +1,15 @@
+Check VMware tools status on CentOS 7
+
+
+    # sudo service vmware-tools status
+    
+    or
+    
+    # systemctl status vmware-tools
+    
+    or 
+    
+    # /etc/init.d/vmware-tools status
+    
+
+
