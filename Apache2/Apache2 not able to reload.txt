@@ -1,0 +1,34 @@
+Apache2 not able to reload
+
+
+    1. error message
+    
+        Process: 3917 ExecReload=/etc/init.d/apache2 reload (code=exited, status=1/FAILURE)
+    
+    
+    2.Solution:
+    
+        The problem is because some configuration files are deleted, you have to reinstall it.
+    
+
+    3.REINSTALL APACHE2:
+        
+        To replace configuration files that have been deleted, 
+    
+        without purging the package, you can do:
+    
+            $ sudo apt-get -o DPkg::Options::="--force-confmiss" --reinstall install apache2
+    
+    
+        To fully remove the apache2 config files, you should:
+    
+            $ sudo apt-get purge apache2
+    
+    
+    
+        which will then let you reinstall it in the usual way with:
+    
+            $ sudo apt-get install apache2
+    
+
+
