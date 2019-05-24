@@ -1,0 +1,77 @@
+Install MariaDB 10.x on Ubuntu 16.04
+
+    When develop a website or web app, the most common solution is LAMP (Linux, Apache, MySQL and PHP).
+    
+    In this article,  we will learn how to setup the MariaDB 10.x on Ubuntu 16.04 LTS.
+    
+    
+    1.Up-to-date the latest Ubuntu server instance:
+
+        Update the list of packages which can be updated:
+        
+            $ sudo apt-get update -y
+        
+        Upgrade the packages which can be upgraded:
+        
+            $ sudo apt-get upgrade -y 
+        
+        Restarting system to let package upgrade take effect.
+        
+            $ sudo shutdown -r now    
+
+
+    2.Setup the system apt repo:
+    
+        There are three steps which is as follows:
+
+        (1).Add some some useful scripts for adding and removing Personal Package 
+            Archives (PPAs).
+    
+            $ sudo apt-get install software-properties-common
+        
+        (2).Add repository keys:
+        
+            $ sudo apt-key adv --recv-keys --keyserver /
+              hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
+
+        (3).Add repository
+    
+            $ sudo add-apt-repository 'deb [arch=amd64,i386,ppc64el] /
+              http://mirror.jmu.edu/pub/mariadb/repo/10.1/ubuntu xenial main'
+      
+      
+    3.Install MariaDB:
+
+        $ sudo apt-get update -y
+        $ sudo apt-get install mariadb-server -y 
+        
+        During the installation process, the MariaDB package configuration 
+        wizard will ask you to setup a new password for the MariaDB root user.
+        
+        For now, just press Enter every time to skip this step.
+        We will setup a password for the MariaDB root user in other article.
+        
+        After MariaDB installed, We can confirm the installation.
+        
+    
+    4.Confirm MariaDB installation
+    
+        (1).Check MariaDB version.
+
+            $ mysql --version
+
+            The output should be similar to:
+        
+                mysql  Ver 15.1 Distrib 10.1.22-MariaDB, for debian-linux-gnu (x86_64) using readline 5.2
+        
+        (2).Restart MariaDB service:
+        
+            $ sudo service mysql restart
+            
+        (3).Start MariaDB service:
+
+            $ sudo service mysql start
+            
+        (4).Show MariaDB status
+        
+            $ sudo service mysql status
