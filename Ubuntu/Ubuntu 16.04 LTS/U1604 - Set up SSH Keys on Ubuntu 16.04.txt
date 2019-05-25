@@ -1,0 +1,82 @@
+
+    $ ssh-keygen
+    
+    
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/user/.ssh/id_rsa): 
+Created directory '/home/user/.ssh'.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/user/.ssh/id_rsa.
+Your public key has been saved in /home/user/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:Z/+kbctJnoEseCBvIFEgdYyl1mL0PhBXa8sVG9oTHdM user@u16046
+The key's randomart image is:
++---[RSA 2048]----+
+|  ..===.. +.oo   |
+|   o.O.  + =..E  |
+|    B o + =      |
+|   o = o o .     |
+|    . = S o      |
+|     . = = o .   |
+|        + o + +  |
+|       . . . O.+ |
+|            ..O. |
++----[SHA256]-----+
+
+user@u16046:~$ 
+user@u16046:~$ ll
+total 36
+drwxr-xr-x 4 user user 4096 May 24 23:40 ./
+drwxr-xr-x 3 root root 4096 May 24 23:34 ../
+-rw------- 1 user user   55 May 24 23:39 .bash_history
+-rw-r--r-- 1 user user  220 May 24 23:34 .bash_logout
+-rw-r--r-- 1 user user 3771 May 24 23:34 .bashrc
+drwx------ 2 user user 4096 May 24 23:36 .cache/
+-rw-r--r-- 1 user user  655 May 24 23:34 .profile
+drwx------ 2 user user 4096 May 24 23:40 .ssh/
+-rw-r--r-- 1 user user    0 May 24 23:36 .sudo_as_admin_successful
+-rw------- 1 user user  104 May 24 23:40 .Xauthority
+user@u16046:~$ cd .ssh
+user@u16046:~/.ssh$ ll
+total 16
+drwx------ 2 user user 4096 May 24 23:40 ./
+drwxr-xr-x 4 user user 4096 May 24 23:40 ../
+-rw------- 1 user user 1675 May 24 23:40 id_rsa
+-rw-r--r-- 1 user user  393 May 24 23:40 id_rsa.pub
+user@u16046:~/.ssh$ ssh-copy-id user@192.168.100.13
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/user/.ssh/id_rsa.pub"
+The authenticity of host '192.168.100.13 (192.168.100.13)' can't be established.
+ECDSA key fingerprint is SHA256:RxYWWdu66EKhSFdVjbZ7GNhqOLx0a98hLSKxidDYHAA.
+Are you sure you want to continue connecting (yes/no)? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+user@192.168.100.13's password: 
+Permission denied, please try again.
+user@192.168.100.13's password: 
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'user@192.168.100.13'"
+and check to make sure that only the key(s) you wanted were added.
+
+ssh user@192.168.100.13
+Welcome to Ubuntu 16.04.6 LTS (GNU/Linux 4.4.0-142-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+8 packages can be updated.
+8 updates are security updates.
+
+New release '18.04.2 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+*** System restart required ***
+Last login: Fri May 24 23:40:26 2019 from 192.168.100.3
+user@u16046:~$ exit
+logout
+Connection to 192.168.100.13 closed.
+
