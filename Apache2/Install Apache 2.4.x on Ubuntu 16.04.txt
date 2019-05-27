@@ -1,0 +1,54 @@
+Install Apache 2.4.x on Ubuntu 16.04
+
+
+    When develop a website or web app, the most common solution is LAMP 
+    (Linux, Apache, MySQL and PHP).
+    
+    In this article,  we will learn how to setup the Apache 2.4.x on Ubuntu 16.04 LTS.
+
+
+    1.Update the Ubuntu system to the latest
+
+        $ sudo apt-get update -y
+        $ sudo apt-get upgrade -y 
+        $ sudo shutdown -r now    
+
+
+    2.Install Apache 2.4.x
+    
+        Use the below command to install the latest stable release of Apache 2
+    
+            $ sudo apt-get install apache2 -y
+        
+        Use the below command to confirm the installation:
+        
+            $ apache2 -v
+        
+            The output should resemble:
+        
+                Server version: Apache/2.4.18 (Ubuntu)
+                Server built:   2016-07-14T12:32:26
+        
+        
+    3.Remove default Apache2 welcome page:
+        
+        Maybe You would like to have own Apache2 welcome page, 
+        therefore we show how to remove the default Apache2 welcome page.
+        
+            $ sudo mv /var/www/html/index.html /var/www/html/index.html.bak
+        
+        
+    4.Prevent to browse the Apache2 web root directory.
+        
+        For security purposes, 
+        you should prevent Apache from exposing files and directories 
+        within the web root directory /var/www/html to visitors.
+        
+            $ sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf.bak
+            $ sudo sed -i "s/Options Indexes FollowSymLinks/Options FollowSymLinks/" /etc/apache2/apache2.conf
+        
+        
+    5.Restart the Apache service and make it enable after reboot system
+        
+        $ sudo systemctl start apache2.service
+        $ sudo systemctl enable apache2.service

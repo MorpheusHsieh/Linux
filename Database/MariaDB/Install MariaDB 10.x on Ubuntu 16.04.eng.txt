@@ -5,7 +5,7 @@ Install MariaDB 10.x on Ubuntu 16.04
     In this article,  we will learn how to setup the MariaDB 10.x on Ubuntu 16.04 LTS.
     
     
-    1.Up-to-date the latest Ubuntu server instance:
+    1.Update the Ubuntu system to the latest
 
         Update the list of packages which can be updated:
         
