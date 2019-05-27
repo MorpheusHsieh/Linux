@@ -1,0 +1,35 @@
+The Prevention of Apache2 Web Root Directory be Browse
+
+
+    About the Apache2 HTTP Server default setup, Apache2 will show all files and
+    directories of web root directory when browser cann't find page.
+    
+    It will have security concern, we suggest to close.
+
+
+    1.Edit '/etc/apache2/apache2.conf'
+
+        $ sudo gedit /etc/apache2/apache2.conf
+
+
+    2.Change Apache2 website root dir and its subdirs as not be browse
+
+        (1).Find content is as foolows:
+
+            <Directory /var/www/>
+                Options Indexes FollowSymLinks 
+                ...
+            </Directory>
+    
+        (2).Revmove 'Indexes'
+        
+            Remove "Indexes" string from "Options Indexes FollowSymLinks" string
+        
+        (3).Save and exit.
+    
+    
+    3.Restart Apache HTTP Server service
+    
+        $ sudo systemctl restart apache2
+
+

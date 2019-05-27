@@ -38,7 +38,7 @@ Install Apache 2.4.x on Ubuntu 16.04
             $ sudo mv /var/www/html/index.html /var/www/html/index.html.bak
         
         
-    4.Prevent to browse the Apache2 web root directory.
+    4.The Apache2 web root directory was prevented to be browse.
         
         For security purposes, 
         you should prevent Apache from exposing files and directories 
