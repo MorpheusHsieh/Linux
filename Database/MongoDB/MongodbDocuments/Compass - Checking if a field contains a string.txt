@@ -1,0 +1,23 @@
+Checking if a field contains a string
+
+    Sometime, we want to query the data set that has contained one certain short 
+    string in specified filed of data table.
+
+    The example is to query the data set that has contained "*son*" string in 
+    "username" field of "users" table.
+
+    
+    1.Operation of mongo shell
+
+        Type following command at mongo shell.
+
+            $ db.users.findOne({"username" : {$regex : ".*son.*"}});
+	
+    
+    2.Operation of Compass
+	
+        (1).Click "users" table on left frame before starting query.
+        
+        (2).Type following command on Compass query bar.
+    
+            {"username" : {$regex : ".*son.*"}} 
