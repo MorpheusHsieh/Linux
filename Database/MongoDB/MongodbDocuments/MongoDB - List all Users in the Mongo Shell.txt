@@ -1,0 +1,24 @@
+List all Users in the Mongo Shell
+
+
+    1.Enter mongo shell
+    
+        $ mongo 
+    
+    
+    2.Returns information for all the users
+
+        The both commands print a list of users for the current database. 
+        
+        See MongoDB documentation for User Management.
+        
+        You ca do 
+        
+        > db.getUsers()
+    
+        or
+    
+        > show users
+    
+        
+        

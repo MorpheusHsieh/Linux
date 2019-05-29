@@ -1,0 +1,40 @@
+MongoDB - Check used disk space
+
+
+    1.Enter mongo shell¡G
+    
+        $ mongo
+        
+        
+    2.Use target database
+    
+        A example of "user" database is as follows:
+        
+        > use mydb1
+            
+            
+    3.Query databse status
+        
+        > db.stats();
+        
+        The following content shall be displayed.
+        
+        {
+            "db" : "mydb1",
+            "collections" : 18,
+            "objects" : 2544544,
+            "avgObjSize" : 248.36209474074727,
+            "dataSize" : 631968278,
+            "storageSize" : 145911808,
+            "numExtents" : 0,
+            "indexes" : 18,
+            "indexSize" : 45776896,
+            "ok" : 1
+        }
+        
+        The used disk space has listed in JSON data.
+        
+        
+        
+
+	
