@@ -1,0 +1,80 @@
+How to remove key added by command apt-key?
+
+    
+    Sometime, we installed some different version of key, 
+    therefore need to remove the older version key.
+    
+    In this article, we have installed two MongoDB keys which are v3.2 and v3.6, 
+    and the MongoDB v3.2 key will be removed .
+    
+    
+    1.List all keys that you added.
+    
+        Do this by the command:
+    
+            $ sudo apt-key list
+    
+        It will list all the keys that you have, with each entry looking like 
+        this:
+    
+        /etc/apt/trusted.gpg
+        --------------------
+        pub   1024D/437D05B5 2004-09-12
+        uid                  Ubuntu Archive Automatic Signing Key <ftpmaster@ubuntu.com>
+        sub   2048g/79164387 2004-09-12
+        
+        pub   4096R/C0B21F32 2012-05-11
+        uid                  Ubuntu Archive Automatic Signing Key (2012) <ftpmaster@ubuntu.com>
+        
+        pub   4096R/EFE21092 2012-05-11
+        uid                  Ubuntu CD Image Automatic Signing Key (2012) <cdimage@ubuntu.com>
+        
+        pub   1024D/FBB75451 2004-12-30
+        uid                  Ubuntu CD Image Automatic Signing Key <cdimage@ubuntu.com>
+        
+        pub   1024R/EA312927 2017-03-02
+        uid                  Totally Legit Signing Key <mallory@example.org>
+        
+        pub   4096R/EA312927 2015-10-09 [expires: 2019-10-09]
+        uid                  MongoDB 3.2 Release Signing Key <packaging@mongodb.com>
+        
+        pub   4096R/91FA4AD5 2016-12-14 [expires: 2023-12-09]
+        uid                  MongoDB 3.6 Release Signing Key <packaging@mongodb.com>
+
+
+    2.Figured out which key to be removed and delete it.
+    
+        We can use the command "apt-key del <keyid>" to delete the target key.
+        
+        For example, the keyid of MongoDB 3.2 is "EA312927",
+        
+        we can remove it as follows:
+        
+            $ sudo apt-key del EA312927
+            OK
+
+
+        Then we can check the list to confirm whether the key of MongoDB 3.2 has 
+        removed.
+
+
+            $ apt-key list | grep MongoDB
+
+            uid                  MongoDB 3.2 Release Signing Key <packaging@mongodb.com>
+            uid                  MongoDB 3.6 Release Signing Key <packaging@mongodb.com>
+            
+        
+        The list figures the MongoDB 3.2 key is still exist, 
+        because there are two keys on the keyserver with the same keyid "EA312927"
+        
+        We delete keyid "EA312927" once again.
+        
+            $  sudo apt-key del EA312927
+            OK
+
+        Check the key list again.
+        
+            $ apt-key list | grep MongoDB
+            uid                  MongoDB 3.6 Release Signing Key <packaging@mongodb.com>
+
+        The MongoDB 3.2 key has be fully removed.
