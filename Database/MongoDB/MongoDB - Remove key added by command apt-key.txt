@@ -54,9 +54,12 @@ How to remove key added by command apt-key?
             OK
 
 
+    3.Confirm the key has be removed
+
         Then we can check the list to confirm whether the key of MongoDB 3.2 has 
         removed.
-
+        
+        Doing following command to shows key list.
 
             $ apt-key list | grep MongoDB
 
@@ -64,8 +67,9 @@ How to remove key added by command apt-key?
             uid                  MongoDB 3.6 Release Signing Key <packaging@mongodb.com>
             
         
-        The list figures the MongoDB 3.2 key is still exist, 
-        because there are two keys on the keyserver with the same keyid "EA312927"
+        The list shows the MongoDB 3.2 key is still exist.
+        Because there are two keys on the keyserver with the same keyid "EA312927".
+        And we had installed two keys.
         
         We delete keyid "EA312927" once again.
         
@@ -77,4 +81,5 @@ How to remove key added by command apt-key?
             $ apt-key list | grep MongoDB
             uid                  MongoDB 3.6 Release Signing Key <packaging@mongodb.com>
 
-        The MongoDB 3.2 key has be fully removed.
+    
+    The MongoDB 3.2 key has be fully removed.
