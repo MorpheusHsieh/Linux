@@ -1,0 +1,28 @@
+The datetime query ways in Mongo Compass
+
+
+    Syntax: 
+        
+        db.[collection name].find({ [key] : {"$date": "2012-01-01T15:00:00.000Z"}})
+    
+    
+    For example:  
+    
+    1.Find data that datetime is greater or equal to the target datetime
+    
+        db.mydb1.find({ "time" : { "gte" : { "$date": "2017-05-24T09:00:00Z" } } })
+    
+        db.mydb1.find({ "time" : { "gte" : { "$date": "2017-05-24T09:00:00.000Z" } } })
+    
+        db.mydb1.find({ "time" : { "gte" : { "$date": "2017-05-24T09:00:00+0800" } } })
+
+
+    2.Find data that datetime is between two target datetimes
+
+    
+        db.mydb1.find({ "time" : 
+                        { 
+                          "gte" : { "$date": "2017-05-24T09:00:00+0800" }, 
+                           "lt" : { "$date": "2017-05-24T09:10:00+0800" } 
+                        }
+                      })
