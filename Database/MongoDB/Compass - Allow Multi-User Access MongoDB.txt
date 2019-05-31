@@ -1,0 +1,26 @@
+How to allow multi-user access mongodb using MongoCompass?
+
+    Usually, we manage MongoDB from other remote host system.
+    
+    But, the default connection IP address of MongoDB is limited to only local 
+    address.
+    
+    Therefore, we need to add some IP address to allow connect to MongoDB for 
+    manage and operate.
+
+
+    1.Edit "/etc/mongod.conf" file
+    
+        $ sudo nano /etc/mongod.conf
+        
+        
+    2.Add bindIp 
+    
+        Find "bindIp: 127.0.0.1" string, and chanage like as follows:
+    
+        
+            bindIp: [127.0.0.1, new_ip_addr1, new_ip_addr2, ...]
+        
+        
+    3.Save & exit.
+
