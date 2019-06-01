@@ -1,4 +1,4 @@
-The datetime query ways in Mongo Compass
+Date query in Mongo Compass
 
 
     Syntax: 
