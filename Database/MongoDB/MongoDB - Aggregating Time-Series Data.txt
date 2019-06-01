@@ -1,0 +1,245 @@
+Aggregating Time-Series Data
+
+
+    1.Compass Query bar
+
+        { "_id.year" : 2017, "_id.month" : 5, "_id.day" : 24, "_id.hour" : 1, "_id.min" : 35 }
+        
+    
+    2.Mongo Shell
+
+        // -------------------------------------------------------------------------------------------------
+        
+        db.table.aggregate({ 
+            $group : { 
+                _id : { 
+                    year : {$year : "$time"}, 
+                    day : {$dayOfMonth: "$time"} 
+                }, 
+            sum_value : { $sum:1 } 
+            }
+        });
+        
+        // -------------------------------------------------------------------------------------------------
+        
+        db.table.aggregate(
+        { 
+            $group : {  
+                _id : {  
+                    year : {       $year: "$time" },  
+                    month: {      $month: "$time" },  
+                    day  : { $dayOfMonth: "$time" }, 
+                    hour : {       $hour: "$time" }, 
+                    min  : {   "$minute": "$time" } 
+                }, 
+                count : { $sum : 1 } 
+            } 
+        },{ 
+            $out : "groups_min" 
+        });
+        
+        // -------------------------------------------------------------------------------------------------
+        
+        db.table.aggregate(
+        [{ 	
+            $match: {
+                time : { 
+                    $gte: ISODate("2017-05-24T01:36:00.0Z"),
+                    $lt : ISODate("2017-05-24T01:40:00.0Z")
+                }
+            }
+        }, {
+            $group : { 
+                _id : { 
+                    year : {     $year  : "$time" },
+                    month: {     $month : "$time" },
+                    day  : { $dayOfMonth: "$time" },
+                    hour : {     $hour  : "$time" },
+                    min  : {     $minute: "$time" },
+                    sec  : { 
+                        $subtract : [
+                            { $second: "$time" },
+                            {  "$mod": [{ $second : "$time"}, 30] }
+                        ]
+                    }
+                }, 
+                count : { $sum : 1 },
+                EM_5V : ["$EM_5V"]
+            }
+        },{
+            $out : "groups_sec"
+        }], {
+          allowDiskUse:true
+        });
+        
+        // -------------------------------------------------------------------------------------------------
+
+        db.table.aggregate(
+        [{ 	
+            $match: {
+                time : { 
+                    $gte: ISODate("2017-05-24T01:36:00.0Z"),
+                    $lt : ISODate("2017-05-24T01:40:00.0Z")
+                }
+            }
+        },{
+            $group : { 
+                _id : { 
+                    year : {     $year  : "$time" },
+                    month: {     $month : "$time" },
+                    day  : { $dayOfMonth: "$time" },
+                    hour : {     $hour  : "$time" },
+                    min  : {     $minute: "$time" },
+                    sec  : { 
+                        $subtract : [
+                            { $second: "$time" },
+                            { "$mod": [{ $second : "$time"}, 30] }
+                        ]
+                    }
+                }, 
+                count : { $sum : 1 },
+                avg : { $avg: "$EM_5V" }
+            }
+        },{
+            $out : "groups_sec"
+        }], {
+          allowDiskUse:true
+        });
+        
+        // -------------------------------------------------------------------------------------------------
+
+        db.table.aggregate(
+        [{ 	
+            $match: {
+                time : { 
+                    $gte: ISODate("2017-05-24T01:36:00.0Z"),
+                    $lt : ISODate("2017-05-24T01:40:00.0Z")
+                }
+            }
+        },{
+            $group : { 
+                _id : { 
+                    year : {     $year  : "$time" },
+                    month: {     $month : "$time" },
+                    day  : { $dayOfMonth: "$time" },
+                    hour : {     $hour  : "$time" },
+                    min  : {     $minute: "$time" },
+                    sec  : { 
+                        $subtract : [
+                            { $second: "$time" },
+                            {  "$mod": [{ $second : "$time"}, 30] }
+                        ]
+                    }
+                }, 
+                count : {   $sum: 1 },
+                  avg : {   $avg: "$EM_5V" },
+                  min : {   $min: "$EM_5V" },
+                  max : {   $max: "$EM_5V" },
+                first : { $first: "$EM_5V" },
+                 lats : {  $last: "$EM_5V" },
+            }
+        },{
+            $out : "groups_sec"
+        }], {
+          allowDiskUse:true
+        });
+        
+        // -------------------------------------------------------------------------------------------------
+        
+        db.table.aggregate([
+            {
+                '$match' : {
+                    'time' : { 
+                        '$gte': ISODate('2017-05-24T01:36:00.0Z'),
+                         '$lt': ISODate('2017-05-24T01:40:00.0Z')
+                    }
+                }
+            }, {
+                '$group' : {
+                    '_id' : { 
+                        'year'  : {       '$year': '$time' },
+                        'month' : {      '$month': '$time' },
+                        'day'   : { '$dayOfMonth': '$time' },
+                        'hour'  : {       '$hour': '$time' },
+                        'minute': {     '$minute': '$time' },
+                        'sec'   : { 
+                            '$subtract' : [
+                                { '$second': '$time' },
+                                {   '$mod' : [{ '$second' : '$time'}, 30] }
+                            ]
+                        }
+                    }, 
+                    'count' : {  '$sum' : 1 },
+                      'avg' : {  '$avg' : '$EM_5V' },
+                      'min' : {  '$min' : '$EM_5V' },
+                      'max' : {  '$max' : '$EM_5V' },
+                    'first' : { '$first': '$EM_5V' },
+                     'last' : {  '$last': '$EM_5V' }
+                }
+            }, {
+                '$project' : {
+                    'tagname' : 'EM_5V',
+                    'period' : { '$add' : [30]},
+                    'count' : 1,
+                    'avg' : 1,
+                    'min' : 1,
+                    'max' : 1,
+                    'first' : 1,
+                    'last' : 1,
+                    'date' : { '$concat' : ['$$year'] }
+                } 
+            }, {
+                '$out' : 'groups_sec'
+            }
+        ],	{ allowDiskUse : true }
+        );
+        
+        // -------------------------------------------------------------------------------------------------
+        
+        db.table.aggregate([
+            {
+                '$match' : {
+                    'time' : { 
+                        '$gte': ISODate('2017-05-24T01:36:00.0Z'),
+                         '$lt': ISODate('2017-05-24T01:40:00.0Z')
+                    }
+                }
+            }, {
+                '$group' : {
+                    '_id' : { 
+                        'year'  : {       '$year': '$time' },
+                        'month' : {      '$month': '$time' },
+                        'day'   : { '$dayOfMonth': '$time' },
+                        'hour'  : {       '$hour': '$time' },
+                        'minute': {     '$minute': '$time' },
+                        'sec'   : { 
+                            '$subtract' : [
+                                { '$second': '$time' },
+                                {   '$mod' : [{ '$second' : '$time'}, 30] }
+                            ]
+                        }
+                    }, 
+                    'count': {   '$sum': 1 },
+                     'avg' : {   '$avg': '$EM_5V' },
+                      'min': {   '$min': '$EM_5V' },
+                      'max': {   '$max': '$EM_5V' },
+                    'first': { '$first': '$EM_5V' },
+                     'last': {  '$last': '$EM_5V' }
+                }
+            }, {
+                '$project' : {
+                    'tagname': 'EM_5V',
+                     'period': { '$add' : [30]},
+                      'count': 1,
+                        'avg': 1,
+                        'min': 1,
+                        'max': 1,
+                      'first': 1,
+                       'last': 1,
+                } 
+            }, {
+              '$out' : 'groups_sec'
+            }
+        ],	{ allowDiskUse : true }
+        );
+        
