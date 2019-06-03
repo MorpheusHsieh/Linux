@@ -1,0 +1,9 @@
+Copy a collection from one database to another in MongoDB
+
+
+    Do following command:
+
+	> use sourcedatabase;
+	> var docs = db.sourcetable.find();
+	> use targetdatabase;
+	> docs.forEach(function(doc) { db.targettable.insert(doc); });
