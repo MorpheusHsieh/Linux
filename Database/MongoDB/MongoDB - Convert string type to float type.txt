@@ -1,0 +1,22 @@
+Convert string type to float type in MongoDB
+
+
+    Since $sum operation can not apply to calculate the sum of string type values,
+    how to convert the filed type from string to float would be useful.
+
+    The scenario of an example is as follows:
+    
+        1.The table name is "shipment"
+        2.The target filed name is "No_Tax_Amount_NTD"
+        3.Convert data type of "No_Tax_Amount_NTD" from string to float.
+	
+	
+    Command:
+
+	> db.shipment.find().forEach(function(doc) { 
+		var value = parseFloat(doc.No_Tax_Amount_NTD); 
+		doc.No_Tax_Amount_NTD = value; 
+		db.shipment.save(doc); 
+	});
+
+
