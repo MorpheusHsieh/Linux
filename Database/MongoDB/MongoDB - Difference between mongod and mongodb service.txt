@@ -1,0 +1,17 @@
+Difference between mongod and mongodb service
+
+
+	I suspect you had MongoDB 2.4 installed previously.
+
+	In MongoDB 2.4 the service was called mongodb and used /etc/mongodb.conf 
+	
+		ref: Install MongoDB 2.4 on Ubuntu => http://docs.mongodb.org/v2.4/tutorial/install-mongodb-on-ubuntu/ 
+
+	
+    With MongoDB 2.6 there was an attempt to have more standard package names across Linux distributions, 
+	
+	so the service was renamed to mongod (to reflect the actual daemon being started) 
+	
+	and the config was changed to mongod.conf 
+		
+		ref: Install MongoDB 2.6 on Ubuntu. => http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
