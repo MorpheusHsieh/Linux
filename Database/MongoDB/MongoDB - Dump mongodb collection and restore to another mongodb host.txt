@@ -1,0 +1,41 @@
+Dump mongodb collection and restore to another mongodb host
+
+
+    1.Dump source collection
+    
+        We can use "mongodump" command to achieve the goal. 
+
+        The syntax is as follows:
+        
+            $ mongodump -d [database name] -c [collection name] -o /path/to/local/file
+        
+        
+        An example of database name of "mydb1" and collection name of "env_F5" 
+        is as follows:
+        
+        Type following commands on source host machine command mode:
+        
+            $ mongodump -d mydb1 -c env_F5 -o env_f5
+
+        
+        When "mongodump" command is successful execution, two files, "env_F5.bson" 
+        and "env_F5.metadata.json", will have been found at "/path/to/local/file".
+        
+        These two files called as dump files.
+    
+    
+    2.Move dump files to destination machine.
+
+    
+    3.Restore dump files
+    
+        The syntax of restore dump file is as follows:
+        
+            $ mongorestore -d [target database name] -c [target collection name] [path/to/bson file]
+    
+        
+        An example of restore dump file to destination host machine is as follows:
+        
+            $ mongorestore -d mydb1 -c env_F5 env_F5/mydb1/env_F5.bson
+    
+	
