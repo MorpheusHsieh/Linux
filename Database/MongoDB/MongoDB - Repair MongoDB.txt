@@ -1,9 +1,12 @@
 How to repair MongoDB
 
 
-    1.
-        # see: http://stackoverflow.com/questions/4837427/mongo-ruby-connection-problem
-        
+    If you can not connect to one MongoDB service, the most probably reason is 
+    mongod lock, we can removing the lock to solved it.
+
+
+    1.For mongodb service
+    
         $ sudo rm /var/lib/mongodb/mongod.lock
         $ sudo -u mongodb mongod -f /etc/mongodb.conf --repair
         $ sudo start mongodb
@@ -11,13 +14,43 @@ How to repair MongoDB
         
         
         
-    2.
+    2.For mongod service
+    
         $ sudo rm /var/lib/mongodb/mongod.lock
         $ sudo mongod --dbpath /var/lib/mongodb --repair
         $ sudo mongod --dbpath /var/lib/mongodb	
         
         
-    3.
+    3.Explanation
+    
+        When we need to repair MongoDB, using the command "mongod --repair" will 
+        help us to do.
+        
+        (1).Stop mongod service
+        
+            Before repair the MongoDB, the service should be stopped in advanced.
+        
+            $ sudo service mongod stop
+            
+            
+        (2).Repair MongoDB
+        
+            The syntax is as follows:
+        
+                $ mongod --dbpath [old DB path] --repair --repairpath [new DB path]
+        
+            An example of old DB path "/data/db" and new DB path "/data/db0" 
+            is as follows:
+        
+                $ mongod --dbpath /data/db --repair --repairpath /data/db0
+        
+
+            During repair the database, system will create a mongod.lock file to 
+            prevent the mongod service been starting and it will be removed 
+            after the repair process is finished.
+        
+        
+        
         Use "mongod --repair" to repair database data.
         
     
@@ -29,8 +62,11 @@ How to repair MongoDB
         範例: mongod --dbpath /data/db --repair --repairpath /data/db0
         
         
+        
+        
         修復期間，會在 DB資料匣 建立一個 mongod.lock 以防止 MONGO 服務啟動
         修復完畢，會自動被刪除掉。
+        
         要注意的是，修復好的DB 必須要注意其擁有者權限是否被更動為 root 了
         不然 MONGO 服務就會啟動失敗，一旦啟動失敗 立刻查看 LOG 最後的紀錄原因。
         
