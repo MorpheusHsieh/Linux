@@ -1,0 +1,44 @@
+How to repair MongoDB
+
+
+    1.
+        # see: http://stackoverflow.com/questions/4837427/mongo-ruby-connection-problem
+        
+        $ sudo rm /var/lib/mongodb/mongod.lock
+        $ sudo -u mongodb mongod -f /etc/mongodb.conf --repair
+        $ sudo start mongodb
+        $ sudo status mongodb
+        
+        
+        
+    2.
+        $ sudo rm /var/lib/mongodb/mongod.lock
+        $ sudo mongod --dbpath /var/lib/mongodb --repair
+        $ sudo mongod --dbpath /var/lib/mongodb	
+        
+        
+    3.
+        Use "mongod --repair" to repair database data.
+        
+    
+        以 mongod --repair 修復DB資料
+        先停止 mongod 的服務，
+        
+        語法: mongod --dbpath DB資料匣 --repair --repairpath 修復後的DB資料匣
+        
+        範例: mongod --dbpath /data/db --repair --repairpath /data/db0
+        
+        
+        修復期間，會在 DB資料匣 建立一個 mongod.lock 以防止 MONGO 服務啟動
+        修復完畢，會自動被刪除掉。
+        要注意的是，修復好的DB 必須要注意其擁有者權限是否被更動為 root 了
+        不然 MONGO 服務就會啟動失敗，一旦啟動失敗 立刻查看 LOG 最後的紀錄原因。
+        
+        
+        
+    4.Restart mongodb 
+    
+    
+        $ sudo systemctl enable mongod
+        $ sudo systemctl daemon-reload
+    
