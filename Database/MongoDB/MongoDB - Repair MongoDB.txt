@@ -45,35 +45,20 @@ How to repair MongoDB
                 $ mongod --dbpath /data/db --repair --repairpath /data/db0
         
 
-            During repair the database, system will create a mongod.lock file to 
-            prevent the mongod service been starting and it will be removed 
-            after the repair process is finished.
+        During repair the database, system will create a mongod.lock file to 
+        prevent the mongod service been starting and it will be removed after 
+        the repair process is finished.
         
-        
-        
-        Use "mongod --repair" to repair database data.
-        
-    
-        以 mongod --repair 修復DB資料
-        先停止 mongod 的服務，
-        
-        語法: mongod --dbpath DB資料匣 --repair --repairpath 修復後的DB資料匣
-        
-        範例: mongod --dbpath /data/db --repair --repairpath /data/db0
-        
-        
-        
-        
-        修復期間，會在 DB資料匣 建立一個 mongod.lock 以防止 MONGO 服務啟動
-        修復完畢，會自動被刪除掉。
-        
-        要注意的是，修復好的DB 必須要注意其擁有者權限是否被更動為 root 了
-        不然 MONGO 服務就會啟動失敗，一旦啟動失敗 立刻查看 LOG 最後的紀錄原因。
-        
+        The worth mention is that the owner of repaired database directories 
+        whether is been changed to belongs root account.
+
+        If so, the database will be starting failed.
+
+        To find the starting failed reason, it is helpful to check over the last 
+        record of log file.
         
         
     4.Restart mongodb 
-    
     
         $ sudo systemctl enable mongod
         $ sudo systemctl daemon-reload
