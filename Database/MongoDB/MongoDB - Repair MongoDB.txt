@@ -13,7 +13,6 @@ How to repair MongoDB
         $ sudo status mongodb
         
         
-        
     2.For mongod service
     
         $ sudo rm /var/lib/mongodb/mongod.lock
