@@ -1,0 +1,34 @@
+db.createUser(
+  { 
+    user: "useradmin", pwd: "useradmin", roles: [
+	 { role: "userAdminAnyDatabase", db:"admin" },
+	  { role: "readWriteAnyDatabase", db:"admin" }
+    ] 
+  }
+);
+
+
+db.createUser(
+  { 
+    user: "siteRootAdmin", 
+    pwd: "siteRootAdmin", 
+	roles: [{ role: "root", db: "admin" }] 
+  }
+);
+
+
+db.createUser(
+  { 
+    user: "mongoadmin", 
+	pwd: "mongoadmin", 
+	roles: [ "readWriteAnyDatabase", "dbAdminAnyDatabase", "clusterAdmin" ] 
+  }
+);
+
+
+db.updateUser("useradmin", {
+  roles : [
+	{ role: "userAdminAnyDatabase", db: "admin" },
+	{ role: "readWriteAnyDatabase", db: "admin" }
+  ]
+});
