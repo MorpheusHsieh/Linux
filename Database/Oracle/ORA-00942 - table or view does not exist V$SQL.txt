@@ -1,0 +1,21 @@
+ORA-00942: table or view does not exist V$SQL
+
+
+Database dictionary related or system tables (v_$sql in this case) are owned by Oracle sys user 
+
+and needs special privileges to access them. 
+
+You need to login to oracle database as sysdba user or get those privilages 
+
+(your DBA might help you with this) to get access for the data dictionary views.
+
+As mentioned in this article
+
+The problem is that procedures don't respect roles; only directly granted rights 
+
+are respected. So, that means that table_owner has to regrant the right to select
+
+So, try the following to grant the SELECT on all dictionay view so that you can use it in your pl/sql blocks.
+
+
+	SQL> grant select any dictionary to USERNAME
