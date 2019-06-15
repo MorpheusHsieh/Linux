@@ -1,0 +1,184 @@
+﻿How to install OCI8 on Homestead and PHP 7.1
+
+
+    Install Oracle Instant Client and SDK
+    
+    
+        Step 1
+        
+            Download the Oracle Instant Client and SDK from Oracle website. (Need to login in Oracle page)
+        
+            Files: instantclient-basic-linux.x64-12.1.0.2.0.zip and instantclient-sdk-linux.x64-12.1.0.2.0.zip.
+            
+                http://download.oracle.com/otn/linux/instantclient/122010/instantclient-basic-linux.x64-12.2.0.1.0.zip
+        
+                http://download.oracle.com/otn/linux/instantclient/122010/instantclient-sdk-linux.x64-12.2.0.1.0.zip
+        
+        
+                
+        Step 2
+        
+            Create a new folder to store Oracle Instant Client zip files on your server.
+        
+            Upload the Instant Clients files inside this folder.
+        
+                $ sudo mkdir /opt/oracle
+            
+            
+        Step 3
+        
+            Now we need to extract the files.
+        
+                $ cd /opt/oracle
+                $ sudo unzip instantclient-basic-linux.x64-12.2.0.1.0.zip
+                $ sudo unzip instantclient-sdk-linux.x64-12.2.0.1.0.zip
+        
+            
+        Step 4
+        
+            Next, we need to create a symlink to Instant Client files.
+        
+                $ sudo ln -s /opt/oracle/instantclient_12_2/libclntsh.so.12.1 /opt/oracle/instantclient_12_2/libclntsh.so
+                $ sudo ln -s /opt/oracle/instantclient_12_2/libocci.so.12.1 /opt/oracle/instantclient_12_2/libocci.so
+        
+                
+        Step 5
+        
+            Add the folder to our ldconfig.
+        
+                echo /opt/oracle/instantclient_12_2 > /etc/ld.so.conf.d/oracle-instantclient
+        
+            therefore, we do
+        
+                $ sudo nano /etc/ld.so.conf.d/oracle-instantclient
+                /opt/oracle/instantclient_12_2
+                
+            save & quit
+        
+                
+        Step 6
+        
+            Update the Dynamic Linker Run-Time Bindings
+        
+                $ sudo ldconfig
+        
+                
+            Done. Now we can proceed to the next part.
+    
+        
+        
+    Install Additional Packages
+    
+        To install the OCI8 extension, we need to install some additional package on our server.
+    
+        
+        Step 1
+    
+            Run these command:
+    
+                $ sudo apt-get install php-dev php-pear build-essential libaio1
+    
+        
+        Step 2
+    
+            Once installed, we need to get the OCI8 file.
+    
+                $ sudo pecl install oci8
+                
+                
+            When you are prompted for the Instant Client location, enter the following:
+    
+                instantclient,/opt/oracle/instantclient_12_2
+    
+                
+        Step 3
+    
+            We need to tell PHP to load the OCI8 extension.
+    
+                $ echo "extension=oci8.so" >> /etc/php/7.1/fpm/php.ini
+                $ echo "extension=oci8.so" >> /etc/php/7.1/cli/php.ini
+                
+                        
+                // 若使用 nginx 作為 HTTP Server 時，省略此步驟
+                $ echo "extension=oci8.so" >> /etc/php/7.1/apache2/php.ini
+                
+            so, we do 
+            
+                $ sudo nano /etc/php/7.1/fpm/php.ini
+                ...
+                extension=oci8.so
+                #EOF
+                
+                $ sudo nano /etc/php/7.1/cli/php.ini
+                ...
+                extension=oci8.so
+                #EOF
+    
+                $ sudo nano /etc/php/7.1/apache2/php.ini
+                ...
+                extension=oci8.so
+                #EOF
+    
+                $ sudo service apache2 restart
+                
+                
+            then, you can use browser to find oci mod
+            
+        Step 4
+    
+            Check if the extension is enabled.
+    
+                $ php -m | grep 'oci8'
+    
+            If returns oci8, its works!
+    
+    
+        Step 5
+    
+            Restart the PHP-FPM and apache2 (or nginx) 
+    
+                $ sudo service php7.1-fpm restart
+                $ sudo service apache2 restart
+                
+                or 
+                
+                $ sudo service nginx restart
+    
+                
+            如果在 Homestead 下 Step 4 成功，但 Step 5 失敗，
+            
+            且在 phpinfo.php 中看到的 php version 和在 vagrant 中看到的版本不符，
+            
+            則到 /etc/nginx/sites-available 下將網站的設定檔中的 php 版本改為正確的即可。
+            
+            例如：
+            
+                在 vagrant 中看到啟動的 php version 為 7.2 版。
+                
+                vagrant@homestead:~$ php -v
+                PHP 7.2.0-1+ubuntu16.04.1+deb.sury.org+1 (cli) (built: Nov 30 2017 13:58:33) ( NTS )
+    
+                但在 phpinfo.php 中看到的版本為 7.1.12 版。
+                
+                就必須去編輯 /etc/nginx/sites-available 中的設定檔，如下：
+            
+                $sudo nano /etc/nginx/sites-available/xxxxxx
+                ...
+                location ~ \.php$ {
+                    fastcgi_split_path_info ^(.+\.php)(/.+)$;
+                    fastcgi_pass unix:/var/run/php/php7.1-fpm.sock;
+                    fastcgi_index index.php;
+                    include fastcgi_params;
+                    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                    ...
+                }
+                
+                將 /var/run/php/php7.1-fpm.sock; 
+                
+                改為 /var/run/php/php7.2-fpm.sock;
+    
+    
+                使得 phpinfo.php 中看到的版本為 7.2 版。
+            
+            
+        Now you can connect to Oracle DBMS from your PHP applications.

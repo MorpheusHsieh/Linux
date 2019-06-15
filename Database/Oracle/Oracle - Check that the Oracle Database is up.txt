@@ -1,17 +1,18 @@
 How check that the Oracle Database is up?
 
-1. on Linux
 
-	$ ps -ef | grep pmon
-	
-
-2. On Windows
-
-	> tasklist|findstr /i oracle
-
-	
-3. sqlplus
-
-	SQL> SELECT INSTANCE_NAME, STATUS, DATABASE_STATUS FROM V$INSTANCE;
-	
+    1. on Linux
+    
+        $ ps -ef | grep pmon
+        
+    
+    2. On Windows
+    
+        > tasklist|findstr /i oracle
+    
+        
+    3. sqlplus
+    
+        SQL> SELECT INSTANCE_NAME, STATUS, DATABASE_STATUS FROM V$INSTANCE;
+        
 	

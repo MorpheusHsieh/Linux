@@ -1,0 +1,50 @@
+Oracle：Create and Drop user
+
+
+    Oracle創建使用者及刪除使用者都是我們經常會用到的，
+    
+    下面就以實例的形式為您介紹Oracle創建使用者及刪除使用者的實現過程，希望對您能有所説明。
+    
+    
+    1. Create user
+    
+        $ sqlplus / as sysdba;
+        
+        進入後出現系列訊息：
+        
+            SQL*Plus: Release 11.2.0.2.0 Production on 星期三 9月 27 09:28:37 2017
+            
+            Copyright (c) 1982, 2011, Oracle.  All rights reserved.
+                
+            Enter password: [KEY-IN YOUR PASSWORD]
+                
+            Connected to:
+            Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+                
+            SQL> 
+    
+    
+        SQL> create user test identified by test default tablespace users;
+        User created.
+        
+        SQL> grant resource,connect to test;
+        Grant succeeded.
+        
+        SQL> commit;
+        Commit complete.
+        
+    
+    2. Drop user	
+    
+        刪除使用者後邊必須跟cascade，否則會失敗。
+        
+    
+        $ sqlplus / as sysdba;
+        ...
+        SQL> drop user test cascade;
+        User dropped.
+        
+        SQL>
+	
+	
+

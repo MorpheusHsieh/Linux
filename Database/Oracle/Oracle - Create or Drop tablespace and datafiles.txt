@@ -1,0 +1,21 @@
+Create or Drop tablespace and datafiles
+
+
+    1. Create tablespace and datafiles
+    
+        tablespace name is TS_EMES_P, and datafile is '$ORACLE_BASE/oradata/EMES2/ts_emes_p.dbf'
+    
+        SQL> CREATE TABLESPACE TS_EMES_P DATAFILE '$ORACLE_BASE/oradata/EMES2/ts_emes_p.dbf' SIZE 512M 
+        AUTOEXTEND ON NEXT 512M MAXSIZE 20000M 
+        EXTENT MANAGEMENT LOCAL AUTOALLOCATE;
+    
+    
+    2. Drop tablespace and datafiles
+    
+        DROP TABLESPACE [tablespace_name] INCLUDING CONTENTS AND DATAFILES;
+        
+        ex: 
+        SQL> DROP TABLESPACE TS_EMES_P INCLUDING CONTENTS AND DATAFILES;
+	
+
+
