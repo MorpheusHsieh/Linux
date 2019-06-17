@@ -1,0 +1,34 @@
+Instance “PLSExtProc”, status UNKNOWN
+
+
+Question:
+
+	$ lsnrctl start
+	Service "PLSExtProc" has 1 instance(s).
+	  Instance "PLSExtProc", status UNKNOWN, has 1 handler(s) for this service...
+	The command completed successfully
+
+	
+
+Ans:
+
+	That is perfectly normal and expected. 
+	
+	Every entry in the SID_LIST section of listener.ora will show as status UNKNOWN. 
+	
+	That simply means the listener is taking your word for it because you listed it. 
+	
+	Contrast that to those that show a status of READY. 
+	
+	These come from the database instance itself registering itself with the listener. 
+	
+	Think of the listener as the desk clerk at a hotel. 
+	
+	The SID_LIST section of listener.ora is the night manager handing the clerk a list of hotel guests. 
+	
+	The clerk has no way of knowing the accuracy of the list and so status is UNKNOWN. 
+	
+	But if a guest walks up and says "my name is Bob. 
+	
+	If anyone calls for me I'll be in room 201", that is the database registering with the listener.	
+	
