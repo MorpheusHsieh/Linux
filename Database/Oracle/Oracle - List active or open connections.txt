@@ -1,0 +1,39 @@
+How to list active/open connections in Oracle?
+
+
+    Execute the following SQL statement on sqlplus:
+    
+    1. 
+        SQL> select	
+            substr(a.spid,1,9) pid,
+            substr(b.sid,1,5) sid,
+            substr(b.serial#,1,5) ser#,
+            substr(b.machine,1,6) box,
+            substr(b.username,1,10) username,
+            substr(b.osuser,1,8) os_user,
+            substr(b.program,1,30) program
+        from v$session b, v$process a
+        where b.paddr = a.addr and type='USER' order by spid;
+        
+        
+        
+    2.
+        SQL> SELECT username FROM v$session 
+        WHERE username IS NOT NULL ORDER BY username ASC;
+        
+    
+    3.
+        SQL> select distinct osuser, count(osuser) as active_conn_count 
+            from v$session group by osuser 
+            order by active_conn_count desc;
+            
+            
+    4.
+        SQL> select	
+                substr(b.machine,1,6) box,
+                substr(b.username,1,10) username,
+                substr(b.osuser,1,8) os_user,
+                substr(b.program,1,30) program
+            from v$session b, v$process a
+            where b.paddr = a.addr and type='USER' order by spid;
+    
