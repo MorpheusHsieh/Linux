@@ -1,0 +1,21 @@
+Examples
+
+Create a role that can log in, but don't give it a password:
+
+	=# CREATE ROLE jonathan LOGIN;
+	
+Create a role with a password:
+
+	=# CREATE USER davide WITH PASSWORD 'jw8s0F4';
+	
+	(CREATE USER is the same as CREATE ROLE except that it implies LOGIN.)
+
+Create a role with a password that is valid until the end of 2004. 
+
+After one second has ticked in 2005, the password is no longer valid.
+
+	=# CREATE ROLE miriam WITH LOGIN PASSWORD 'jw8s0F4' VALID UNTIL '2005-01-01';
+
+Create a role that can create databases and manage roles:
+
+	=# CREATE ROLE admin WITH CREATEDB CREATEROLE;
