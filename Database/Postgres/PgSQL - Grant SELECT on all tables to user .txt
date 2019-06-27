@@ -1,0 +1,17 @@
+GRANT SELECT on all tables to user
+
+
+
+I thought it might be helpful to mention that, as of 9.0, 
+
+postgres does have the syntax to grant privileges on all tables (as well as other objects) in a schema:
+
+	=# GRANT SELECT ON ALL TABLES IN SCHEMA public TO user;
+	=# GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO user;
+	
+	
+	
+	
+	=# GRANT SELECT ON mytable TO PUBLIC;
+	=# GRANT SELECT, UPDATE, INSERT ON mytable TO admin;
+	=# GRANT SELECT (col1), UPDATE (col1) ON mytable TO miriam_rw;
