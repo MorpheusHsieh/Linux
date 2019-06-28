@@ -1,0 +1,27 @@
+PostgreSQL：How to manage default privileges for users on a DB
+
+
+	CREATE USER session_admin WITH PASSWORD 'session_admin';
+	CREATE USER session_mgr   WITH PASSWORD 'session_mgr';
+	CREATE USER session_usr   WITH PASSWORD 'session_usr';
+	
+	GRANT session_usr TO session_mgr;
+	GRANT session_mgr TO session_admin;
+	
+	CREATE DATABASE sessiondb;
+	GRANT CONNECT ON DATABASE sessiondb TO session_usr;
+	\connect sessiondb
+	
+	GRANT USAGE  ON SCHEMA public TO session_usr;
+	GRANT CREATE ON SCHEMA public TO session_admin;
+	
+	-- only read
+	ALTER DEFAULT PRIVILEGES FOR ROLE session_admin
+	GRANT SELECT ON TABLES TO session_usr;
+	
+	-- + write, TRUNCATE optional
+	ALTER DEFAULT PRIVILEGES FOR ROLE session_admin
+	GRANT INSERT, UPDATE, DELETE, TRUNCATE ON TABLES TO session_mgr;
+	
+	ALTER DEFAULT PRIVILEGES FOR ROLE session_admin
+	GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO session_mgr;
