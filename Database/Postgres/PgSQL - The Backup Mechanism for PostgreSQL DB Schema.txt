@@ -1,0 +1,93 @@
+The Backup Mechanism for PostgreSQL DB Schema
+
+
+    1.Open Postgresql shell 
+    
+        $ sudo - postgres
+        [sudo] password for misadmin: xxxx
+    
+        
+    2.執行 pg_dump 指令， 語法為：pg_dump [database name] > [export filename]
+        
+        例如：
+        
+            $ pg_dump daily_report > daily_report_db.bak
+        
+        執行完畢後離開 postgres 帳號的執行環境
+    
+            $ exit
+        
+        
+    3.找剛剛在 postgres 帳號下匯出的檔案：
+    
+        檔案位置在：/var/lib/postgresql
+        
+        將它移動到想要存放的目錄，例如 /tmp
+        
+        $ cd /var/lib/postgresql
+        $ sudo mv daily_report_db.bak /tmp/daily_report_db.bak
+        
+        
+    4.以 ftp command line 上傳到其他主機
+    
+        程序如下：
+        
+        $ ftp 10.1.5.230
+    
+        Connected to 10.1.5.230.
+        220 (vsFTPd 3.0.3)
+        Name (10.1.5.230:misadmin): apache
+        331 Please specify the password.
+        Password:
+        230 Login successful.
+        Remote system type is UNIX.
+        Using binary mode to transfer files.
+    
+        ftp> binary
+        200 Switching to Binary mode.
+    
+        ftp> dir
+        500 Illegal PORT command.
+        ftp: bind: Address already in use
+    
+        ftp> pass
+        Passive mode on.
+    
+        ftp> dir
+        227 Entering Passive Mode
+        425 Security: Bad IP connecting.
+        
+        
+        開副本：
+            
+            開啟另一個視窗以 SSH 連線到 ftp server，並編輯 /etc/vsftpd.conf 檔案。
+        
+            在 /etc/vsftpd.conf 底端加入：
+            pasv_promiscuous=YES 
+        
+            儲存後重啟 vsftpd 服務
+            $ sudo service vsftpd restart
+        
+            回到原來的視窗。
+            
+        回主線：
+        
+        ftp> dir
+        227 Entering Passive Mode (192,168,115,17,109,150).
+        150 Here comes the directory listing.
+        -rw-r--r--    1 ftp      ftp             0 Jan 05 02:16 postgresql_daily_report_db.bak
+        226 Directory send OK.
+    
+        ftp> put daily_report_db.bak
+        local: daily_report_db.bak remote: daily_report_db.bak
+        227 Entering Passive Mode (192,168,115,17,156,88).
+        150 Ok to send data.
+        226 Transfer complete.
+        67779 bytes sent in 0.00 secs (525.5211 MB/s)
+    
+        ftp> quit
+        221 Goodbye.
+    
+    5.到 FTP server 確認檔案已經上傳。
+	
+	
