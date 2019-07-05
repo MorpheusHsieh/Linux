@@ -1,93 +1,109 @@
 The Backup Mechanism for PostgreSQL DB Schema
 
 
-    1.Open Postgresql shell 
+    1.Open PostgreSQL shell 
     
         $ sudo - postgres
         [sudo] password for misadmin: xxxx
     
         
-    2.執行 pg_dump 指令， 語法為：pg_dump [database name] > [export filename]
+    2.Execute "pg_dump" command 
+    
+        Syntax: pg_dump [database name] > [export filename]
         
-        例如：
+        For example:
         
             $ pg_dump daily_report > daily_report_db.bak
         
-        執行完畢後離開 postgres 帳號的執行環境
+        Exit shell environment after 'pg_dump' finished.
     
             $ exit
         
         
-    3.找剛剛在 postgres 帳號下匯出的檔案：
+    3.Move dump file
     
-        檔案位置在：/var/lib/postgresql
+        For the convience to upload dump file to remote machine, 
         
-        將它移動到想要存放的目錄，例如 /tmp
-        
-        $ cd /var/lib/postgresql
-        $ sudo mv daily_report_db.bak /tmp/daily_report_db.bak
+        we need to move dump file to another dorectory.
         
         
-    4.以 ftp command line 上傳到其他主機
+        (1).Find dump file (daily_report_db.bak).
     
-        程序如下：
+            It should be at '/var/lib/postgresql' directory.
+
+        (2).Move it to new directory, e.g., /tmp.
         
-        $ ftp 10.1.5.230
-    
-        Connected to 10.1.5.230.
-        220 (vsFTPd 3.0.3)
-        Name (10.1.5.230:misadmin): apache
-        331 Please specify the password.
-        Password:
-        230 Login successful.
-        Remote system type is UNIX.
-        Using binary mode to transfer files.
-    
-        ftp> binary
-        200 Switching to Binary mode.
-    
-        ftp> dir
-        500 Illegal PORT command.
-        ftp: bind: Address already in use
-    
-        ftp> pass
-        Passive mode on.
-    
-        ftp> dir
-        227 Entering Passive Mode
-        425 Security: Bad IP connecting.
+            $ cd /var/lib/postgresql
+            $ sudo mv daily_report_db.bak /tmp/daily_report_db.bak
         
         
-        開副本：
+    4.Upload dump file to remote machine
+    
+        We will use ftp command to upload dump file to remote machine.
+        
+        Here is a example for the remote machine IP address as 10.1.5.230.
+    
+        The process is as follows:
+        
+        (1). Connect to remote machine
+        
+            $ ftp 10.1.5.230
+        
+            Connected to 10.1.5.230.
+            220 (vsFTPd 3.0.3)
+            Name (10.1.5.230:misadmin): apache
+            331 Please specify the password.
+            Password:
+            230 Login successful.
+            Remote system type is UNIX.
+            Using binary mode to transfer files.
+        
+            ftp> binary
+            200 Switching to Binary mode.
+        
+            ftp> pass
+            Passive mode on.
+        
+        
+        (2).Allow display catalog and upload file.
+        
+            A.Open a new terminal window and SSH to login remote machine.
             
-            開啟另一個視窗以 SSH 連線到 ftp server，並編輯 /etc/vsftpd.conf 檔案。
-        
-            在 /etc/vsftpd.conf 底端加入：
-            pasv_promiscuous=YES 
-        
-            儲存後重啟 vsftpd 服務
-            $ sudo service vsftpd restart
-        
-            回到原來的視窗。
+            B.Edit '/etc/vsftpd.conf' file
+                
+                $ sudo nano /etc/vsftpd.conf
+                
+            C.Added following content at the bottom of 'vsftpd.conf' file
             
-        回主線：
+                pasv_promiscuous=YES 
+
+            D.Save 'vsftpd.conf' file
+            
+            E.Restart vsftpd service
+            
+                $ sudo service vsftpd restart
+
+            Return to first terminal window.
         
-        ftp> dir
-        227 Entering Passive Mode (192,168,115,17,109,150).
-        150 Here comes the directory listing.
-        -rw-r--r--    1 ftp      ftp             0 Jan 05 02:16 postgresql_daily_report_db.bak
-        226 Directory send OK.
+            
+        (3).Put dump file to remote machine
+        
+            ftp> dir
+            227 Entering Passive Mode (192,168,115,17,109,150).
+            150 Here comes the directory listing.
+            -rw-r--r--    1 ftp      ftp             0 Jan 05 02:16 postgresql_daily_report_db.bak
+            226 Directory send OK.
+        
+            ftp> put daily_report_db.bak
+            local: daily_report_db.bak remote: daily_report_db.bak
+            227 Entering Passive Mode (192,168,115,17,156,88).
+            150 Ok to send data.
+            226 Transfer complete.
+            67779 bytes sent in 0.00 secs (525.5211 MB/s)
+        
+            ftp> quit
+            221 Goodbye.
     
-        ftp> put daily_report_db.bak
-        local: daily_report_db.bak remote: daily_report_db.bak
-        227 Entering Passive Mode (192,168,115,17,156,88).
-        150 Ok to send data.
-        226 Transfer complete.
-        67779 bytes sent in 0.00 secs (525.5211 MB/s)
-    
-        ftp> quit
-        221 Goodbye.
-    
-    5.到 FTP server 確認檔案已經上傳。
-	
+    5.Verify dump file already upload to remote machine.
+    	
 	
